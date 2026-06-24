@@ -1,0 +1,7 @@
+{
+  "$schema": "https://unpkg.com/knip@latest/schema.json",
+  "entry": ["src/main.ts"],
+  "project": ["src/**/*.{ts,vue}"],
+  "ignoreDependencies": [],
+  "ignore": ["src/components.d.ts", "src/auto-imports.d.ts"]
+}

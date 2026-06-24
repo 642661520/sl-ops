@@ -1,0 +1,2 @@
+# Placeholder - static assets directory
+# Files in this directory are served at / during dev and copied to dist/ on build
