@@ -3,7 +3,7 @@
     <div class="mb-6 flex items-center justify-between">
       <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">服务管理</h1>
       <app-button variant="primary" size="sm" @click="openCreate">
-        <span class="i-carbon-add" />
+        <span class="i-carbon-add"></span>
         新增服务
       </app-button>
     </div>
@@ -14,7 +14,7 @@
         <div class="w-56">
           <app-input v-model="searchName" placeholder="搜索服务名称" :clearable="true">
             <template #prefix>
-              <span class="i-carbon-search" />
+              <span class="i-carbon-search"></span>
             </template>
           </app-input>
         </div>
@@ -22,7 +22,7 @@
           <app-select v-model="searchType" :options="typeOptions" placeholder="服务类型" />
         </div>
         <app-button variant="default" size="sm" @click="loadData">
-          <span class="i-carbon-search" />
+          <span class="i-carbon-search"></span>
           查询
         </app-button>
       </div>
@@ -32,17 +32,17 @@
     <app-card>
       <app-table :columns="columns" :data="tableData" :loading="loading" empty-text="暂无服务数据">
         <template #cell-serviceType="{ value }">
-          <app-tag :type="getTypeTag(value)">
-            {{ getTypeLabel(value) }}
+          <app-tag :type="getTypeTag(value as string)">
+            {{ getTypeLabel(value as string) }}
           </app-tag>
         </template>
         <template #cell-actions="{ row }">
           <div class="flex items-center gap-1">
             <app-button variant="text" size="sm" @click="openEdit(row)">
-              <span class="i-carbon-edit" />
+              <span class="i-carbon-edit"></span>
             </app-button>
             <app-button variant="text" size="sm" @click="handleDelete(row)">
-              <span class="i-carbon-trash-can text-red-500" />
+              <span class="i-carbon-trash-can text-red-500"></span>
             </app-button>
           </div>
         </template>
@@ -147,6 +147,7 @@ const columns: TableColumn[] = [
 ]
 
 const loading = ref(false)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const tableData = ref<any[]>([])
 
 const searchName = ref('')
@@ -194,6 +195,7 @@ function openCreate() {
   modalVisible.value = true
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function openEdit(row: any) {
   editingId.value = row.id
   Object.assign(form, {
@@ -221,21 +223,24 @@ async function handleSubmit() {
   submitting.value = true
   try {
     if (editingId.value) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       await Apis.service.update({ data: { id: editingId.value, ...form } as any }).send()
       message.success('更新成功')
     } else {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       await Apis.service.create({ data: form as any }).send()
       message.success('创建成功')
     }
     closeModal()
     await loadData()
-  } catch (e: any) {
-    message.error(e.message || '操作失败')
+  } catch (e: unknown) {
+    message.error((e as { message?: string }).message || '操作失败')
   } finally {
     submitting.value = false
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function handleDelete(row: any) {
   dialog.show({
     title: '删除服务',
@@ -248,8 +253,8 @@ function handleDelete(row: any) {
           .send()
         message.success('删除成功')
         await loadData()
-      } catch (e: any) {
-        message.error(e.message || '删除失败')
+      } catch (e: unknown) {
+        message.error((e as { message?: string }).message || '删除失败')
       }
     },
   })
@@ -262,6 +267,7 @@ async function loadData() {
       .list({
         params: {
           serviceName: searchName.value || undefined,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           serviceType: (searchType.value || undefined) as any,
         },
       })
@@ -277,6 +283,7 @@ async function loadData() {
 async function loadServers() {
   try {
     const res = await Apis.asset.list_1({ params: {} }).send()
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     serverOptions.value = (res.data || []).map((s: any) => ({
       label: `${s.hostName} (${s.hostIp})`,
       value: s.id,

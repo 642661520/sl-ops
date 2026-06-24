@@ -8,7 +8,7 @@
     }"
   >
     <span v-if="$slots.prefix" class="ml-3 text-gray-400">
-      <slot name="prefix" />
+      <slot name="prefix"></slot>
     </span>
     <input
       ref="inputRef"
@@ -26,16 +26,16 @@
       class="mr-2 cursor-pointer text-gray-400 hover:text-gray-600"
       @click="handleClear"
     >
-      <span class="i-carbon-close text-sm" />
+      <span class="i-carbon-close text-sm"></span>
     </button>
     <span v-if="$slots.suffix" class="mr-3 text-gray-400">
-      <slot name="suffix" />
+      <slot name="suffix"></slot>
     </span>
   </div>
 </template>
 
 <script setup lang="ts">
-const props = withDefaults(
+withDefaults(
   defineProps<{
     modelValue?: string
     placeholder?: string

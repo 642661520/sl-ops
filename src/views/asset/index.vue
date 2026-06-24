@@ -3,7 +3,7 @@
     <div class="mb-6 flex items-center justify-between">
       <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">服务器资产</h1>
       <app-button variant="primary" size="sm" @click="openCreate">
-        <span class="i-carbon-add" />
+        <span class="i-carbon-add"></span>
         新增服务器
       </app-button>
     </div>
@@ -14,19 +14,19 @@
         <div class="w-48">
           <app-input v-model="searchIp" placeholder="搜索 IP 地址" :clearable="true">
             <template #prefix>
-              <span class="i-carbon-search" />
+              <span class="i-carbon-search"></span>
             </template>
           </app-input>
         </div>
         <div class="w-48">
           <app-input v-model="searchName" placeholder="搜索主机别名" :clearable="true">
             <template #prefix>
-              <span class="i-carbon-search" />
+              <span class="i-carbon-search"></span>
             </template>
           </app-input>
         </div>
         <app-button variant="default" size="sm" @click="loadData">
-          <span class="i-carbon-search" />
+          <span class="i-carbon-search"></span>
           查询
         </app-button>
       </div>
@@ -48,10 +48,10 @@
         <template #cell-actions="{ row }">
           <div class="flex items-center gap-1">
             <app-button variant="text" size="sm" @click="openEdit(row)">
-              <span class="i-carbon-edit" />
+              <span class="i-carbon-edit"></span>
             </app-button>
             <app-button variant="text" size="sm" @click="handleDelete(row)">
-              <span class="i-carbon-trash-can text-red-500" />
+              <span class="i-carbon-trash-can text-red-500"></span>
             </app-button>
           </div>
         </template>
@@ -133,6 +133,7 @@ const columns: TableColumn[] = [
 ]
 
 const loading = ref(false)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const tableData = ref<any[]>([])
 const searchIp = ref('')
 const searchName = ref('')
@@ -158,6 +159,7 @@ function openCreate() {
   modalVisible.value = true
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function openEdit(row: any) {
   editingId.value = row.id
   Object.assign(form, {
@@ -182,12 +184,13 @@ async function handleSubmit() {
   }
   submitting.value = true
   try {
-    const payload: any = {
+    const payload = {
       hostIp: form.hostIp,
       hostName: form.hostName,
       sshPort: Number(form.sshPortStr) || 22,
       sshUsername: form.sshUsername,
       nodeExporterPort: Number(form.nodeExporterPortStr) || 9100,
+      sshPassword: undefined as string | undefined,
     }
     if (!editingId.value) {
       payload.sshPassword = form.sshPassword
@@ -196,18 +199,20 @@ async function handleSubmit() {
       await Apis.asset.update_1({ data: { id: editingId.value, ...payload } }).send()
       message.success('更新成功')
     } else {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       await Apis.asset.create_1({ data: payload as any }).send()
       message.success('创建成功')
     }
     closeModal()
     await loadData()
-  } catch (e: any) {
-    message.error(e.message || '操作失败')
+  } catch (e: unknown) {
+    message.error((e as { message?: string }).message || '操作失败')
   } finally {
     submitting.value = false
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function handleDelete(row: any) {
   dialog.show({
     title: '删除服务器',
@@ -218,8 +223,8 @@ function handleDelete(row: any) {
         await Apis.asset.delete_1({ pathParams: { id: Number(row.id.replace('srv-', '')) } }).send()
         message.success('删除成功')
         await loadData()
-      } catch (e: any) {
-        message.error(e.message || '删除失败')
+      } catch (e: unknown) {
+        message.error((e as { message?: string }).message || '删除失败')
       }
     },
   })

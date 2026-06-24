@@ -36,7 +36,7 @@
         "
         :title="collapsed ? item.label : ''"
       >
-        <span :class="item.icon" class="text-lg flex-shrink-0" />
+        <span :class="item.icon" class="text-lg flex-shrink-0"></span>
         <Transition name="fade">
           <span v-if="!collapsed" class="whitespace-nowrap">{{ item.label }}</span>
         </Transition>
@@ -52,14 +52,14 @@
         <span
           class="i-carbon-side-panel-open text-lg transition-transform duration-300"
           :class="{ 'rotate-180': collapsed }"
-        />
+        ></span>
       </button>
     </div>
   </aside>
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{
+defineProps<{
   collapsed: boolean
 }>()
 

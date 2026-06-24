@@ -1,14 +1,14 @@
 <template>
   <div ref="dropdownRef" class="relative inline-block">
     <div @click="toggle">
-      <slot name="trigger" />
+      <slot name="trigger"></slot>
     </div>
     <Transition name="dropdown">
       <div
         v-if="open"
         class="absolute right-0 z-50 mt-2 min-w-36 rounded-lg border border-gray-200 bg-white py-1 shadow-lg dark:border-gray-600 dark:bg-gray-800"
       >
-        <slot />
+        <slot></slot>
       </div>
     </Transition>
   </div>

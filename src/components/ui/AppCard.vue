@@ -13,9 +13,9 @@
         </h3>
       </slot>
     </div>
-    <slot />
+    <slot></slot>
     <div v-if="$slots.footer" class="mt-4 border-t border-gray-100 pt-3 dark:border-gray-700">
-      <slot name="footer" />
+      <slot name="footer"></slot>
     </div>
   </div>
 </template>

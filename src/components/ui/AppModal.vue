@@ -2,7 +2,7 @@
   <Teleport to="body">
     <Transition name="modal">
       <div v-if="visible" class="fixed inset-0 z-9990 flex items-center justify-center p-4">
-        <div class="absolute inset-0 bg-black/50 transition-opacity" @click="handleCancel" />
+        <div class="absolute inset-0 bg-black/50 transition-opacity" @click="handleCancel"></div>
         <div
           class="relative max-h-[85vh] overflow-auto rounded-xl bg-white shadow-2xl dark:bg-gray-800"
           :style="{ width: width || '520px' }"
@@ -17,11 +17,11 @@
               class="cursor-pointer rounded-lg p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-700"
               @click="handleCancel"
             >
-              <span class="i-carbon-close text-lg" />
+              <span class="i-carbon-close text-lg"></span>
             </button>
           </div>
           <div class="px-6 py-4">
-            <slot />
+            <slot></slot>
           </div>
           <div
             v-if="showFooter"
@@ -43,7 +43,7 @@
 </template>
 
 <script setup lang="ts">
-const props = withDefaults(
+withDefaults(
   defineProps<{
     visible: boolean
     title?: string

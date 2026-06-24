@@ -1,7 +1,7 @@
 import { defineMock } from '@alova/mock'
 import servicesData from './data/services.json'
 
-let services = JSON.parse(JSON.stringify(servicesData)) as typeof servicesData
+const services = JSON.parse(JSON.stringify(servicesData)) as typeof servicesData
 let nextId = services.length + 1
 
 export default defineMock(
@@ -28,28 +28,28 @@ export default defineMock(
       return { code: 200, msg: 'success', data: svc }
     },
 
-    '[POST]/service': ({ data }: { data: any }) => {
+    '[POST]/service': ({ data }: { data: Record<string, unknown> }) => {
       const newSvc = {
         id: `svc-${String(nextId++).padStart(3, '0')}`,
-        serverId: data.serverId || '',
-        serviceName: data.serviceName || '',
-        serviceType: data.serviceType || 'docker',
-        description: data.description || '',
-        startCommand: data.startCommand,
-        stopCommand: data.stopCommand,
-        restartCommand: data.restartCommand,
-        statusCommand: data.statusCommand,
+        serverId: String(data.serverId || ''),
+        serviceName: String(data.serviceName || ''),
+        serviceType: String(data.serviceType || 'docker'),
+        description: String(data.description || ''),
+        startCommand: String(data.startCommand ?? ''),
+        stopCommand: String(data.stopCommand ?? ''),
+        restartCommand: String(data.restartCommand ?? ''),
+        statusCommand: String(data.statusCommand ?? ''),
       }
       services.push(newSvc)
       return { code: 200, msg: '创建成功', data: newSvc.id }
     },
 
-    '[PUT]/service': ({ data }: { data: any }) => {
+    '[PUT]/service': ({ data }: { data: Record<string, unknown> }) => {
       const idx = services.findIndex((s) => s.id === data.id)
       if (idx === -1) {
         return { code: 404, msg: '服务不存在', data: false }
       }
-      services[idx] = { ...services[idx], ...data }
+      services[idx] = { ...services[idx], ...(data as object) }
       return { code: 200, msg: '更新成功', data: true }
     },
 

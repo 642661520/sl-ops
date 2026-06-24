@@ -3,7 +3,7 @@
     <Transition name="dialog">
       <div v-if="state.visible" class="fixed inset-0 z-9998 flex items-center justify-center">
         <!-- 遮罩 -->
-        <div class="absolute inset-0 bg-black/50 transition-opacity" @click="handleCancel" />
+        <div class="absolute inset-0 bg-black/50 transition-opacity" @click="handleCancel"></div>
         <!-- 弹窗 -->
         <div
           class="relative w-100 max-w-[90vw] rounded-xl bg-white p-6 shadow-2xl dark:bg-gray-800"
@@ -21,7 +21,7 @@
             <app-button
               :variant="state.type === 'danger' ? 'danger' : 'primary'"
               size="sm"
-              :loading="state.loading"
+              :loading="localLoading"
               @click="handleConfirm"
             >
               {{ state.confirmText }}
@@ -45,20 +45,25 @@ const emit = defineEmits<{
   confirm: []
 }>()
 
+const localLoading = ref(false)
+
 function handleCancel() {
   emit('cancel')
 }
 
 async function handleConfirm() {
+  if (localLoading.value) return
   if (props.state.onConfirm) {
-    props.state.loading = true
+    localLoading.value = true
     try {
       await props.state.onConfirm()
+      emit('confirm')
     } finally {
-      props.state.loading = false
+      localLoading.value = false
     }
+  } else {
+    emit('confirm')
   }
-  emit('confirm')
 }
 </script>
 

@@ -21,7 +21,7 @@
       <span
         class="i-carbon-chevron-down text-sm text-gray-400 transition-transform duration-200"
         :class="{ 'rotate-180': open }"
-      />
+      ></span>
     </button>
     <Transition name="select">
       <div

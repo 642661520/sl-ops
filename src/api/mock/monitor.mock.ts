@@ -48,7 +48,9 @@ export default defineMock(
   {
     '[GET]/monitor/overview': ({ query }: { query: Record<string, string> }) => {
       if (query.serverId) {
-        const item = overviewData.find((s: any) => s.serverId === query.serverId)
+        const item = overviewData.find(
+          (s: Record<string, unknown>) => s.serverId === query.serverId,
+        )
         return { code: 200, msg: 'success', data: item ? [item] : [] }
       }
       return { code: 200, msg: 'success', data: overviewData }

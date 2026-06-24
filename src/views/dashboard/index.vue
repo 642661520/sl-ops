@@ -3,13 +3,13 @@
     <div class="mb-6 flex items-center justify-between">
       <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">仪表盘</h1>
       <div class="flex items-center gap-3 text-xs text-gray-400">
-        <span class="i-carbon-time" />
+        <span class="i-carbon-time"></span>
         <span>每 30s 刷新 · 上次：{{ lastUpdated }}</span>
         <button
           class="cursor-pointer rounded p-1 hover:bg-gray-100 dark:hover:bg-gray-700"
           @click="manualRefresh"
         >
-          <span class="i-carbon-renew text-sm" :class="{ 'animate-spin': refreshing }" />
+          <span class="i-carbon-renew text-sm" :class="{ 'animate-spin': refreshing }"></span>
         </button>
       </div>
     </div>
@@ -21,7 +21,7 @@
           <div
             class="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-100 dark:bg-blue-900/30"
           >
-            <span class="i-carbon-data-center text-2xl text-blue-600 dark:text-blue-400" />
+            <span class="i-carbon-data-center text-2xl text-blue-600 dark:text-blue-400"></span>
           </div>
           <div>
             <p class="text-2xl font-bold text-gray-900 dark:text-gray-100">{{ stats.servers }}</p>
@@ -35,7 +35,9 @@
           <div
             class="flex h-12 w-12 items-center justify-center rounded-xl bg-green-100 dark:bg-green-900/30"
           >
-            <span class="i-carbon-cics-system-group text-2xl text-green-600 dark:text-green-400" />
+            <span
+              class="i-carbon-cics-system-group text-2xl text-green-600 dark:text-green-400"
+            ></span>
           </div>
           <div>
             <p class="text-2xl font-bold text-gray-900 dark:text-gray-100">{{ stats.services }}</p>
@@ -49,7 +51,7 @@
           <div
             class="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-100 dark:bg-emerald-900/30"
           >
-            <span class="i-carbon-checkmark text-2xl text-emerald-600 dark:text-emerald-400" />
+            <span class="i-carbon-checkmark text-2xl text-emerald-600 dark:text-emerald-400"></span>
           </div>
           <div>
             <p class="text-2xl font-bold text-gray-900 dark:text-gray-100">{{ stats.running }}</p>
@@ -63,7 +65,7 @@
           <div
             class="flex h-12 w-12 items-center justify-center rounded-xl bg-red-100 dark:bg-red-900/30"
           >
-            <span class="i-carbon-close text-2xl text-red-600 dark:text-red-400" />
+            <span class="i-carbon-close text-2xl text-red-600 dark:text-red-400"></span>
           </div>
           <div>
             <p class="text-2xl font-bold text-gray-900 dark:text-gray-100">{{ stats.stopped }}</p>
@@ -88,7 +90,7 @@
                 class="h-full rounded-full transition-all"
                 :class="getUsageColor(Number(value))"
                 :style="{ width: value + '%' }"
-              />
+              ></div>
             </div>
             <span class="text-xs tabular-nums">{{ value }}%</span>
           </div>
@@ -100,7 +102,7 @@
                 class="h-full rounded-full transition-all"
                 :class="getUsageColor(Number(value))"
                 :style="{ width: value + '%' }"
-              />
+              ></div>
             </div>
             <span class="text-xs tabular-nums">{{ value }}%</span>
           </div>
@@ -112,7 +114,7 @@
                 class="h-full rounded-full transition-all"
                 :class="getUsageColor(Number(value))"
                 :style="{ width: value + '%' }"
-              />
+              ></div>
             </div>
             <span class="text-xs tabular-nums">{{ value }}%</span>
           </div>
@@ -190,6 +192,7 @@ async function manualRefresh() {
 
 // 监控总览
 const overviewLoading = ref(false)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const overviewData = ref<any[]>([])
 
 const overviewColumns: TableColumn[] = [
@@ -309,30 +312,34 @@ async function loadChartData() {
 
 async function fetchMetric(
   tab: string,
-  p: Record<string, any>,
+  p: Record<string, unknown>,
 ): Promise<{ timestamp: number; value: number }[] | null> {
   try {
-    let res: any
+    let res: { data?: unknown } | null = null
     switch (tab) {
       case 'cpu':
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         res = await Apis.monitor.getCpuUsage({ params: p as any }).send()
         break
       case 'memory':
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         res = await Apis.monitor.getMemoryUsage({ params: p as any }).send()
         break
       case 'disk':
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         res = await Apis.monitor.getDiskUsage({ params: p as any }).send()
         break
       case 'network':
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         res = await Apis.monitor.getNetworkUsage({ params: p as any }).send()
         break
     }
     if (!res?.data) return null
     // network 返回 { rx, tx }，取 rx 和 tx 合并或取 rx
-    if (tab === 'network' && res.data.rx) {
-      return res.data.rx
+    if (tab === 'network' && (res.data as { rx?: unknown }).rx) {
+      return (res.data as { rx: { timestamp: number; value: number }[] }).rx
     }
-    return Array.isArray(res.data) ? res.data : []
+    return Array.isArray(res.data) ? (res.data as { timestamp: number; value: number }[]) : []
   } catch {
     return null
   }
@@ -354,6 +361,7 @@ async function loadServers() {
     const list = res.data || []
     serverOptions.value = [
       { label: '全部服务器', value: '' },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ...list.map((s: any) => ({ label: s.hostName, value: s.id })),
     ]
   } catch {
@@ -370,13 +378,17 @@ watch(selectedServerId, () => {
 })
 
 onMounted(async () => {
+  await loadServers()
   await manualRefresh()
-  loadServers()
 })
 
-// 每 30 秒自动刷新监控数据
-useIntervalFn(async () => {
-  await Promise.all([loadOverview(), loadChartData()])
-  updateTime()
-}, 30000)
+// 每 30 秒自动刷新监控数据（不立即触发，首次由 onMounted 加载）
+useIntervalFn(
+  async () => {
+    await Promise.all([loadOverview(), loadChartData()])
+    updateTime()
+  },
+  30000,
+  { immediate: false },
+)
 </script>

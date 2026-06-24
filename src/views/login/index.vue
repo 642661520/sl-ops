@@ -6,12 +6,14 @@
     >
       <!-- 装饰背景 -->
       <div class="absolute inset-0 opacity-20">
-        <div class="absolute -top-20 -left-20 h-80 w-80 rounded-full border border-white/20" />
-        <div class="absolute top-1/3 right-0 h-60 w-60 rounded-full border border-white/10" />
-        <div class="absolute -bottom-10 left-1/4 h-40 w-40 rounded-full border border-white/15" />
-        <div class="absolute top-10 right-20 h-2 w-2 rounded-full bg-white/30" />
-        <div class="absolute bottom-1/4 right-1/3 h-1.5 w-1.5 rounded-full bg-white/20" />
-        <div class="absolute top-1/2 left-10 h-1 w-1 rounded-full bg-white/25" />
+        <div class="absolute -top-20 -left-20 h-80 w-80 rounded-full border border-white/20"></div>
+        <div class="absolute top-1/3 right-0 h-60 w-60 rounded-full border border-white/10"></div>
+        <div
+          class="absolute -bottom-10 left-1/4 h-40 w-40 rounded-full border border-white/15"
+        ></div>
+        <div class="absolute top-10 right-20 h-2 w-2 rounded-full bg-white/30"></div>
+        <div class="absolute bottom-1/4 right-1/3 h-1.5 w-1.5 rounded-full bg-white/20"></div>
+        <div class="absolute top-1/2 left-10 h-1 w-1 rounded-full bg-white/25"></div>
         <!-- 连线装饰 -->
         <svg class="absolute inset-0 h-full w-full" xmlns="http://www.w3.org/2000/svg">
           <line
@@ -50,15 +52,15 @@
         <!-- 特性小点 -->
         <div class="mt-10 space-y-3">
           <div class="flex items-center gap-3 text-sm text-gray-400">
-            <span class="i-carbon-checkmark text-green-400" />
+            <span class="i-carbon-checkmark text-green-400"></span>
             服务器资产统一纳管
           </div>
           <div class="flex items-center gap-3 text-sm text-gray-400">
-            <span class="i-carbon-checkmark text-green-400" />
+            <span class="i-carbon-checkmark text-green-400"></span>
             服务运行状态实时监控
           </div>
           <div class="flex items-center gap-3 text-sm text-gray-400">
-            <span class="i-carbon-checkmark text-green-400" />
+            <span class="i-carbon-checkmark text-green-400"></span>
             一键启停远程服务管控
           </div>
         </div>
@@ -88,7 +90,7 @@
             >
             <app-input v-model="username" placeholder="请输入用户名" :clearable="false">
               <template #prefix>
-                <span class="i-carbon-user-avatar" />
+                <span class="i-carbon-user-avatar"></span>
               </template>
             </app-input>
           </div>
@@ -104,7 +106,7 @@
               :clearable="false"
             >
               <template #prefix>
-                <span class="i-carbon-password" />
+                <span class="i-carbon-password"></span>
               </template>
             </app-input>
           </div>
@@ -113,7 +115,7 @@
             v-if="errorMsg"
             class="flex items-center gap-2 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600 dark:bg-red-900/20 dark:text-red-400"
           >
-            <span class="i-carbon-close" />
+            <span class="i-carbon-close"></span>
             {{ errorMsg }}
           </div>
 
@@ -153,8 +155,8 @@ async function handleLogin() {
     await authStore.login(username.value, password.value)
     message.success('登录成功')
     router.replace('/')
-  } catch (e: any) {
-    errorMsg.value = e.message || '登录失败'
+  } catch (e: unknown) {
+    errorMsg.value = (e as { message?: string }).message || '登录失败'
   } finally {
     loading.value = false
   }

@@ -3,7 +3,7 @@
     <div class="mb-6 flex items-center justify-between">
       <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">服务管控</h1>
       <app-button variant="default" size="sm" @click="refreshStatuses">
-        <span class="i-carbon-renew" :class="{ 'animate-spin': refreshing }" />
+        <span class="i-carbon-renew" :class="{ 'animate-spin': refreshing }"></span>
         刷新状态
       </app-button>
     </div>
@@ -37,7 +37,7 @@
               <span
                 class="i-carbon-circle-filled text-[8px]"
                 :class="statusMap[svc.id] === 'running' ? 'text-green-500' : 'text-gray-400'"
-              />
+              ></span>
               {{ statusMap[svc.id] === 'running' ? '运行中' : '已停止' }}
             </span>
           </div>
@@ -52,7 +52,7 @@
             :loading="actionLoading[svc.id] && actionTarget[svc.id] === 'start'"
             @click="executeAction(svc, 'start')"
           >
-            <span class="i-carbon-play text-green-500" />
+            <span class="i-carbon-play text-green-500"></span>
             启动
           </app-button>
           <app-button
@@ -62,7 +62,7 @@
             :loading="actionLoading[svc.id] && actionTarget[svc.id] === 'stop'"
             @click="executeAction(svc, 'stop')"
           >
-            <span class="i-carbon-stop text-red-500" />
+            <span class="i-carbon-stop text-red-500"></span>
             停止
           </app-button>
           <app-button
@@ -72,7 +72,7 @@
             :loading="actionLoading[svc.id] && actionTarget[svc.id] === 'restart'"
             @click="executeAction(svc, 'restart')"
           >
-            <span class="i-carbon-restart text-amber-500" />
+            <span class="i-carbon-restart text-amber-500"></span>
             重启
           </app-button>
         </div>
@@ -86,12 +86,12 @@
         :key="i"
         class="animate-pulse rounded-xl border border-gray-200 bg-white p-5 dark:border-gray-700 dark:bg-gray-800"
       >
-        <div class="mb-3 h-4 w-2/3 rounded bg-gray-200 dark:bg-gray-700" />
-        <div class="mb-8 h-3 w-1/2 rounded bg-gray-100 dark:bg-gray-700" />
+        <div class="mb-3 h-4 w-2/3 rounded bg-gray-200 dark:bg-gray-700"></div>
+        <div class="mb-8 h-3 w-1/2 rounded bg-gray-100 dark:bg-gray-700"></div>
         <div class="flex gap-2">
-          <div class="h-8 w-16 rounded bg-gray-100 dark:bg-gray-700" />
-          <div class="h-8 w-16 rounded bg-gray-100 dark:bg-gray-700" />
-          <div class="h-8 w-16 rounded bg-gray-100 dark:bg-gray-700" />
+          <div class="h-8 w-16 rounded bg-gray-100 dark:bg-gray-700"></div>
+          <div class="h-8 w-16 rounded bg-gray-100 dark:bg-gray-700"></div>
+          <div class="h-8 w-16 rounded bg-gray-100 dark:bg-gray-700"></div>
         </div>
       </div>
     </div>
@@ -112,6 +112,7 @@ const dialog = inject<DialogInstance>(DIALOG_KEY)!
 
 const loading = ref(false)
 const refreshing = ref(false)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const services = ref<any[]>([])
 
 // 状态映射
@@ -145,17 +146,23 @@ async function loadServices() {
 
 async function refreshStatuses() {
   refreshing.value = true
-  for (const svc of services.value) {
-    try {
-      const res = await Apis.serviceControl.getStatus({ params: { serviceId: svc.id } }).send()
-      statusMap.value[svc.id] = res.data || 'stopped'
-    } catch {
-      statusMap.value[svc.id] = 'stopped'
-    }
+  const results = await Promise.all(
+    services.value.map(async (svc) => {
+      try {
+        const res = await Apis.serviceControl.getStatus({ params: { serviceId: svc.id } }).send()
+        return { id: svc.id, status: res.data || 'stopped' }
+      } catch {
+        return { id: svc.id, status: 'stopped' }
+      }
+    }),
+  )
+  for (const r of results) {
+    statusMap.value[r.id] = r.status
   }
   refreshing.value = false
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function executeAction(svc: any, action: string) {
   const actionLabel: Record<string, string> = { start: '启动', stop: '停止', restart: '重启' }
   dialog.show({
@@ -167,6 +174,7 @@ function executeAction(svc: any, action: string) {
       try {
         const res = await Apis.serviceControl
           .executeControl({
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             data: { serviceId: svc.id, action: action as any },
           })
           .send()
@@ -177,8 +185,8 @@ function executeAction(svc: any, action: string) {
         } else if (action === 'stop') {
           statusMap.value[svc.id] = 'stopped'
         }
-      } catch (e: any) {
-        message.error(e.message || '操作失败')
+      } catch (e: unknown) {
+        message.error((e as { message?: string }).message || '操作失败')
       } finally {
         actionLoading[svc.id] = false
         actionTarget[svc.id] = ''
@@ -193,5 +201,5 @@ onMounted(async () => {
 })
 
 // 每 10 秒刷新服务运行状态
-useIntervalFn(refreshStatuses, 10000)
+useIntervalFn(refreshStatuses, 10000, { immediate: false })
 </script>

@@ -11,7 +11,7 @@
             :key="col"
             class="h-4 flex-1 rounded bg-gray-200 dark:bg-gray-700"
             :style="{ width: columns[col - 1]?.width }"
-          />
+          ></div>
         </div>
       </div>
     </div>
@@ -45,7 +45,7 @@
                   v-if="col.sortable && sortKey === col.key"
                   class="i-carbon-chevron-down text-xs transition-transform"
                   :class="{ 'rotate-180': sortOrder === 'desc' }"
-                />
+                ></span>
               </span>
             </th>
           </tr>
@@ -83,7 +83,7 @@ export interface TableColumn {
 const props = withDefaults(
   defineProps<{
     columns: TableColumn[]
-    data: Record<string, any>[]
+    data: Record<string, unknown>[]
     loading?: boolean
     emptyText?: string
   }>(),
@@ -99,8 +99,8 @@ const sortOrder = ref<'asc' | 'desc'>('asc')
 const sortedData = computed(() => {
   if (!sortKey.value) return props.data
   return [...props.data].sort((a, b) => {
-    const va = a[sortKey.value]
-    const vb = b[sortKey.value]
+    const va = a[sortKey.value] as string | number
+    const vb = b[sortKey.value] as string | number
     const cmp = va < vb ? -1 : va > vb ? 1 : 0
     return sortOrder.value === 'asc' ? cmp : -cmp
   })

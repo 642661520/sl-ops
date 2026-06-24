@@ -5,7 +5,7 @@
       :disabled="current <= 1"
       @click="go(current - 1)"
     >
-      <span class="i-carbon-chevron-left text-sm" />
+      <span class="i-carbon-chevron-left text-sm"></span>
     </button>
     <button
       v-for="p in displayPages"
@@ -24,7 +24,7 @@
       :disabled="current >= totalPages"
       @click="go(current + 1)"
     >
-      <span class="i-carbon-chevron-right text-sm" />
+      <span class="i-carbon-chevron-right text-sm"></span>
     </button>
   </div>
 </template>

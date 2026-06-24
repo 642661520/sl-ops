@@ -9,8 +9,8 @@
     :disabled="disabled || loading"
     @click="emit('click', $event)"
   >
-    <span v-if="loading" class="i-carbon-circle-dash animate-spin text-base" />
-    <slot />
+    <span v-if="loading" class="i-carbon-circle-dash animate-spin text-base"></span>
+    <slot></slot>
   </button>
 </template>
 

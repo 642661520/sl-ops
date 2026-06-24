@@ -17,6 +17,8 @@ export default defineConfigWithVueTs(
       '**/*.d.ts',
       'src/auto-imports.d.ts',
       'src/components.d.ts',
+      'alova.shared.ts',
+      'eslint.config.ts',
     ],
   },
 
@@ -39,6 +41,14 @@ export default defineConfigWithVueTs(
       // TS
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
       '@typescript-eslint/consistent-type-imports': ['error', { prefer: 'type-imports' }],
+    },
+  },
+
+  {
+    name: 'app/views-override',
+    files: ['src/views/**/*.vue'],
+    rules: {
+      'vue/multi-word-component-names': 'off',
     },
   },
 

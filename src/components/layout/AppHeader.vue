@@ -8,7 +8,7 @@
         class="cursor-pointer rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-700 dark:hover:text-gray-300"
         @click="emit('toggle')"
       >
-        <span class="i-carbon-side-panel-open text-lg" :class="{ 'rotate-180': collapsed }" />
+        <span class="i-carbon-side-panel-open text-lg" :class="{ 'rotate-180': collapsed }"></span>
       </button>
       <div class="text-sm text-gray-500">
         <span class="text-gray-400">{{ pageTitle }}</span>
@@ -22,14 +22,7 @@
         class="cursor-pointer rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-700 dark:hover:text-gray-300"
         @click="toggleDark()"
       >
-        <span class="i-carbon-sun text-lg dark:i-carbon-moon" />
-      </button>
-
-      <!-- 通知 -->
-      <button
-        class="cursor-pointer rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-700 dark:hover:text-gray-300"
-      >
-        <span class="i-carbon-notification text-lg" />
+        <span class="i-carbon-sun text-lg dark:i-carbon-moon"></span>
       </button>
 
       <!-- 用户下拉 -->
@@ -38,7 +31,7 @@
           <button
             class="flex cursor-pointer items-center gap-2 rounded-lg px-2 py-1 transition-colors hover:bg-gray-100 dark:hover:bg-gray-700"
           >
-            <span class="i-carbon-user-avatar text-xl text-gray-500 dark:text-gray-400" />
+            <span class="i-carbon-user-avatar text-xl text-gray-500 dark:text-gray-400"></span>
             <span class="text-sm text-gray-700 dark:text-gray-300">{{ username }}</span>
           </button>
         </template>
@@ -47,7 +40,7 @@
             class="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-gray-700 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
             @click="handleLogout"
           >
-            <span class="i-carbon-logout text-base" />
+            <span class="i-carbon-logout text-base"></span>
             退出登录
           </button>
         </div>
