@@ -1,7 +1,11 @@
 {
-  "$schema": "https://raw.githubusercontent.com/oxc-project/oxc/main/npm/oxlint/configuration_schema.json",
-  "plugins": ["import", "typescript", "unicorn", "vue"],
+  "ignorePatterns": [
+    "alova.shared.mjs",
+    "src/api/apiDefinitions.ts",
+    "src/api/createApis.ts",
+    "src/api/globals.d.ts"
+  ],
   "rules": {
-    "no-unused-vars": "warn"
+    "unicorn/no-useless-fallback-in-spread": "off"
   }
 }
