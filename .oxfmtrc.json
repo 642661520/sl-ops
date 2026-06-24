@@ -16,6 +16,10 @@
     ".tsc-output/",
     "pnpm-lock.yaml",
     "src/auto-imports.d.ts",
-    "src/components.d.ts"
+    "src/components.d.ts",
+    "src/api/apiDefinitions.ts",
+    "src/api/createApis.ts",
+    "src/api/globals.d.ts",
+    "alova_tmp_*.cjs"
   ]
 }

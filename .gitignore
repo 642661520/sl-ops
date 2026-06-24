@@ -12,6 +12,7 @@ dist-ssr/
 
 # Generated
 openapi/*.transformed.json
+alova_tmp_*.cjs
 
 # IDE
 .vscode/*
