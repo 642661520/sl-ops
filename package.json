@@ -16,6 +16,8 @@
     "check": "run-p oxlint oxfmt type-check",
     "check:fix": "oxfmt --write && run-p oxlint type-check",
     "knip": "knip",
+    "api:transform": "node scripts/transform-openapi-tags.mjs",
+    "api:generate": "npm run api:transform && alova gen",
     "changeset:add": "changeset add",
     "changeset:version": "changeset version",
     "changeset:commit": "changeset tag"
@@ -30,6 +32,7 @@
     "vue-router": "catalog:"
   },
   "devDependencies": {
+    "@alova/wormhole": "catalog:",
     "@changesets/cli": "catalog:",
     "@types/node": "catalog:",
     "@unocss/preset-attributify": "catalog:",

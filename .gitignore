@@ -10,6 +10,9 @@ dist-ssr/
 *.tsbuildinfo
 .tsc-output/
 
+# Generated
+openapi/*.transformed.json
+
 # IDE
 .vscode/*
 !.vscode/settings.json

@@ -1,6 +1,7 @@
 packages: []
 
 catalog:
+  '@alova/wormhole': ^1.5.0
   '@changesets/cli': ^2.31.0
   '@types/node': ^26.0.0
   '@unocss/preset-attributify': ^66.7.0

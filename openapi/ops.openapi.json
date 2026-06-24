@@ -1,0 +1,1264 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "默认模块",
+    "description": "",
+    "version": "1.0.0"
+  },
+  "tags": [
+    {
+      "name": "服务信息管理接口"
+    },
+    {
+      "name": "服务器资产管理接口"
+    },
+    {
+      "name": "服务管控接口"
+    },
+    {
+      "name": "监控指标获取接口"
+    }
+  ],
+  "paths": {
+    "/service": {
+      "put": {
+        "summary": "编辑服务",
+        "deprecated": false,
+        "description": "编辑服务",
+        "operationId": "update",
+        "tags": ["服务信息管理接口"],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ServiceInfoUpdateBo"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "是否成功",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RBoolean"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      },
+      "post": {
+        "summary": "新增服务",
+        "deprecated": false,
+        "description": "新增服务",
+        "operationId": "create",
+        "tags": ["服务信息管理接口"],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ServiceInfoAddBo"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "新服务的ID",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RLong"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/service/{id}": {
+      "get": {
+        "summary": "根据ID获取服务详情",
+        "deprecated": false,
+        "description": "根据ID获取服务详情",
+        "operationId": "get",
+        "tags": ["服务信息管理接口"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "example": "",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RServiceInfoVo"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      },
+      "delete": {
+        "summary": "删除服务",
+        "deprecated": false,
+        "description": "删除服务",
+        "operationId": "delete",
+        "tags": ["服务信息管理接口"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "example": "",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "是否成功",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RBoolean"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/service/list": {
+      "get": {
+        "summary": "获取服务列表（支持多条件查询）",
+        "deprecated": false,
+        "description": "获取服务列表（支持多条件查询）",
+        "operationId": "list",
+        "tags": ["服务信息管理接口"],
+        "parameters": [
+          {
+            "name": "serverId",
+            "in": "query",
+            "description": "关联的服务器主键ID",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string",
+              "description": "关联的服务器主键ID"
+            }
+          },
+          {
+            "name": "serviceName",
+            "in": "query",
+            "description": "服务名称（模糊匹配）",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string",
+              "description": "服务名称（模糊匹配）"
+            }
+          },
+          {
+            "name": "serviceType",
+            "in": "query",
+            "description": "服务类型",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string",
+              "description": "服务类型",
+              "enum": ["docker", "systemctl", "custom"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RListServiceInfoVo"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/server": {
+      "put": {
+        "summary": "编辑服务器",
+        "deprecated": false,
+        "description": "编辑服务器",
+        "operationId": "update_1",
+        "tags": ["服务器资产管理接口"],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ServerAssetUpdateBo"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "是否成功",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RBoolean"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      },
+      "post": {
+        "summary": "新增服务器",
+        "deprecated": false,
+        "description": "新增服务器",
+        "operationId": "create_1",
+        "tags": ["服务器资产管理接口"],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ServerAssetAddBo"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "新服务器的ID",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RLong"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/server/{id}": {
+      "get": {
+        "summary": "根据ID获取服务器详情",
+        "deprecated": false,
+        "description": "根据ID获取服务器详情",
+        "operationId": "get_1",
+        "tags": ["服务器资产管理接口"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "服务器主键ID",
+            "required": true,
+            "example": "",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RServerAssetVo"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      },
+      "delete": {
+        "summary": "删除服务器",
+        "deprecated": false,
+        "description": "删除服务器",
+        "operationId": "delete_1",
+        "tags": ["服务器资产管理接口"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "服务器主键ID",
+            "required": true,
+            "example": "",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "是否成功",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RBoolean"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/server/list": {
+      "get": {
+        "summary": "获取服务器列表（支持多条件查询）",
+        "deprecated": false,
+        "description": "获取服务器列表（支持多条件查询）",
+        "operationId": "list_1",
+        "tags": ["服务器资产管理接口"],
+        "parameters": [
+          {
+            "name": "hostIp",
+            "in": "query",
+            "description": "服务器IP地址（模糊匹配）",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string",
+              "description": "服务器IP地址（模糊匹配）"
+            }
+          },
+          {
+            "name": "hostName",
+            "in": "query",
+            "description": "主机别名（模糊匹配）",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string",
+              "description": "主机别名（模糊匹配）"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RListServerAssetVo"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/control/execute": {
+      "post": {
+        "summary": "执行服务管控命令",
+        "deprecated": false,
+        "description": "执行服务管控命令",
+        "operationId": "executeControl",
+        "tags": ["服务管控接口"],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ControlExecuteBo"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "命令执行输出",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RString"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/control/status": {
+      "get": {
+        "summary": "查询服务运行状态",
+        "deprecated": false,
+        "description": "查询服务运行状态",
+        "operationId": "getStatus",
+        "tags": ["服务管控接口"],
+        "parameters": [
+          {
+            "name": "serviceId",
+            "in": "query",
+            "description": "服务ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "服务状态（running / stopped / degraded）",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RString"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/monitor/overview": {
+      "get": {
+        "summary": "获取所有服务器监控总览",
+        "deprecated": false,
+        "description": "获取所有服务器监控总览",
+        "operationId": "getOverview",
+        "tags": ["监控指标获取接口"],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RListServerOverview"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/monitor/network": {
+      "get": {
+        "summary": "获取网络流量趋势",
+        "deprecated": false,
+        "description": "获取网络流量趋势",
+        "operationId": "getNetworkUsage",
+        "tags": ["监控指标获取接口"],
+        "parameters": [
+          {
+            "name": "serverId",
+            "in": "query",
+            "description": "服务器主键ID",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string",
+              "description": "服务器主键ID"
+            }
+          },
+          {
+            "name": "duration",
+            "in": "query",
+            "description": "查询时间范围（秒），默认 3600",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "description": "查询时间范围（秒），默认 3600"
+            }
+          },
+          {
+            "name": "step",
+            "in": "query",
+            "description": "采样步长（秒），默认 60",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "description": "采样步长（秒），默认 60"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RNetworkUsageVo"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/monitor/memory": {
+      "get": {
+        "summary": "获取内存使用率趋势",
+        "deprecated": false,
+        "description": "获取内存使用率趋势",
+        "operationId": "getMemoryUsage",
+        "tags": ["监控指标获取接口"],
+        "parameters": [
+          {
+            "name": "serverId",
+            "in": "query",
+            "description": "服务器主键ID",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string",
+              "description": "服务器主键ID"
+            }
+          },
+          {
+            "name": "duration",
+            "in": "query",
+            "description": "查询时间范围（秒），默认 3600",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "description": "查询时间范围（秒），默认 3600"
+            }
+          },
+          {
+            "name": "step",
+            "in": "query",
+            "description": "采样步长（秒），默认 60",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "description": "采样步长（秒），默认 60"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RListMetricPoint"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/monitor/disk": {
+      "get": {
+        "summary": "获取磁盘使用率趋势",
+        "deprecated": false,
+        "description": "获取磁盘使用率趋势",
+        "operationId": "getDiskUsage",
+        "tags": ["监控指标获取接口"],
+        "parameters": [
+          {
+            "name": "serverId",
+            "in": "query",
+            "description": "服务器主键ID",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string",
+              "description": "服务器主键ID"
+            }
+          },
+          {
+            "name": "duration",
+            "in": "query",
+            "description": "查询时间范围（秒），默认 3600",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "description": "查询时间范围（秒），默认 3600"
+            }
+          },
+          {
+            "name": "step",
+            "in": "query",
+            "description": "采样步长（秒），默认 60",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "description": "采样步长（秒），默认 60"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RListMetricPoint"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/monitor/cpu": {
+      "get": {
+        "summary": "获取 CPU 使用率趋势",
+        "deprecated": false,
+        "description": "获取 CPU 使用率趋势",
+        "operationId": "getCpuUsage",
+        "tags": ["监控指标获取接口"],
+        "parameters": [
+          {
+            "name": "serverId",
+            "in": "query",
+            "description": "服务器主键ID",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string",
+              "description": "服务器主键ID"
+            }
+          },
+          {
+            "name": "duration",
+            "in": "query",
+            "description": "查询时间范围（秒），默认 3600",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "description": "查询时间范围（秒），默认 3600"
+            }
+          },
+          {
+            "name": "step",
+            "in": "query",
+            "description": "采样步长（秒），默认 60",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "description": "采样步长（秒），默认 60"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RListMetricPoint"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    }
+  },
+  "webhooks": {},
+  "components": {
+    "schemas": {
+      "RString": {
+        "type": "object",
+        "description": "响应信息主体",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "description": "消息状态码"
+          },
+          "msg": {
+            "type": "string",
+            "description": "消息内容"
+          },
+          "data": {
+            "type": "string",
+            "description": "数据对象"
+          }
+        }
+      },
+      "RListServerOverview": {
+        "type": "object",
+        "description": "响应信息主体",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "description": "消息状态码"
+          },
+          "msg": {
+            "type": "string",
+            "description": "消息内容"
+          },
+          "data": {
+            "type": "array",
+            "description": "数据对象",
+            "items": {
+              "$ref": "#/components/schemas/ServerOverview"
+            }
+          }
+        }
+      },
+      "ServerOverview": {
+        "type": "object",
+        "description": "服务器监控总览数据",
+        "properties": {
+          "serverId": {
+            "type": "string",
+            "description": "服务器主键ID"
+          },
+          "hostName": {
+            "type": "string",
+            "description": "服务器主机名称"
+          },
+          "cpuUsage": {
+            "type": "string",
+            "description": "CPU 使用率 (%)"
+          },
+          "memoryUsage": {
+            "type": "string",
+            "description": "内存 使用率 (%)"
+          },
+          "diskUsage": {
+            "type": "string",
+            "description": "磁盘 使用率 (%)"
+          }
+        },
+        "required": ["cpuUsage", "diskUsage", "hostName", "memoryUsage", "serverId"]
+      },
+      "MetricPoint": {
+        "type": "object",
+        "description": "监控指标数据点",
+        "properties": {
+          "timestamp": {
+            "type": "integer",
+            "format": "int64",
+            "description": "13位毫秒时间戳"
+          },
+          "value": {
+            "type": "number",
+            "description": "指标值"
+          }
+        }
+      },
+      "RListMetricPoint": {
+        "type": "object",
+        "description": "响应信息主体",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "description": "消息状态码"
+          },
+          "msg": {
+            "type": "string",
+            "description": "消息内容"
+          },
+          "data": {
+            "type": "array",
+            "description": "数据对象",
+            "items": {
+              "$ref": "#/components/schemas/MetricPoint"
+            }
+          }
+        }
+      },
+      "RBoolean": {
+        "type": "object",
+        "description": "响应信息主体",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "description": "消息状态码"
+          },
+          "msg": {
+            "type": "string",
+            "description": "消息内容"
+          },
+          "data": {
+            "type": "boolean",
+            "description": "数据对象"
+          }
+        }
+      },
+      "RLong": {
+        "type": "object",
+        "description": "响应信息主体",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "description": "消息状态码"
+          },
+          "msg": {
+            "type": "string",
+            "description": "消息内容"
+          },
+          "data": {
+            "type": "integer",
+            "format": "int64",
+            "description": "数据对象"
+          }
+        }
+      },
+      "ServiceInfoUpdateBo": {
+        "type": "object",
+        "description": "服务信息编辑请求",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "主键ID"
+          },
+          "serviceName": {
+            "type": "string",
+            "description": "服务名称"
+          },
+          "serviceType": {
+            "type": "string",
+            "description": "服务类型",
+            "enum": ["docker", "systemctl", "custom"]
+          },
+          "description": {
+            "type": "string",
+            "description": "服务描述"
+          },
+          "startCommand": {
+            "type": "string",
+            "description": "自定义启动命令(仅custom类型使用)"
+          },
+          "stopCommand": {
+            "type": "string",
+            "description": "自定义停止命令(仅custom类型使用)"
+          },
+          "restartCommand": {
+            "type": "string",
+            "description": "自定义重启命令(仅custom类型使用)"
+          },
+          "statusCommand": {
+            "type": "string",
+            "description": "自定义查看状态命令(仅custom类型使用)"
+          }
+        },
+        "required": ["id"]
+      },
+      "ServerAssetUpdateBo": {
+        "type": "object",
+        "description": "服务器资产编辑请求",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "主键ID"
+          },
+          "hostName": {
+            "type": "string",
+            "description": "主机别名"
+          },
+          "sshPort": {
+            "type": "integer",
+            "format": "int32",
+            "description": "SSH端口，有效范围 1-65535"
+          },
+          "sshUsername": {
+            "type": "string",
+            "description": "SSH登录用户名"
+          },
+          "sshPassword": {
+            "type": "string",
+            "description": "SSH登录密码"
+          },
+          "nodeExporterPort": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Node Exporter 指标采集端口，有效范围 1-65535"
+          }
+        },
+        "required": ["id"]
+      },
+      "ServiceInfoAddBo": {
+        "type": "object",
+        "description": "服务信息新增请求",
+        "properties": {
+          "serverId": {
+            "type": "string",
+            "description": "关联的服务器主键ID"
+          },
+          "serviceName": {
+            "type": "string",
+            "description": "服务名称",
+            "minLength": 1
+          },
+          "serviceType": {
+            "type": "string",
+            "description": "服务类型",
+            "enum": ["docker", "systemctl", "custom"]
+          },
+          "description": {
+            "type": "string",
+            "description": "服务描述"
+          },
+          "startCommand": {
+            "type": "string",
+            "description": "自定义启动命令(仅custom类型使用)"
+          },
+          "stopCommand": {
+            "type": "string",
+            "description": "自定义停止命令(仅custom类型使用)"
+          },
+          "restartCommand": {
+            "type": "string",
+            "description": "自定义重启命令(仅custom类型使用)"
+          },
+          "statusCommand": {
+            "type": "string",
+            "description": "自定义查看状态命令(仅custom类型使用)"
+          }
+        },
+        "required": ["serverId", "serviceName", "serviceType"]
+      },
+      "ServerAssetAddBo": {
+        "type": "object",
+        "description": "服务器资产新增请求",
+        "properties": {
+          "hostIp": {
+            "type": "string",
+            "description": "服务器IP地址",
+            "minLength": 1
+          },
+          "hostName": {
+            "type": "string",
+            "description": "主机别名",
+            "minLength": 1
+          },
+          "sshPort": {
+            "type": "integer",
+            "format": "int32",
+            "description": "SSH端口，有效范围 1-65535",
+            "maximum": 65535,
+            "minimum": 1
+          },
+          "sshUsername": {
+            "type": "string",
+            "description": "SSH登录用户名",
+            "minLength": 1
+          },
+          "sshPassword": {
+            "type": "string",
+            "description": "SSH登录密码",
+            "minLength": 1
+          },
+          "nodeExporterPort": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Node Exporter 指标采集端口，有效范围 1-65535",
+            "maximum": 65535,
+            "minimum": 1
+          }
+        },
+        "required": [
+          "hostIp",
+          "hostName",
+          "nodeExporterPort",
+          "sshPassword",
+          "sshPort",
+          "sshUsername"
+        ]
+      },
+      "RServiceInfoVo": {
+        "type": "object",
+        "description": "响应信息主体",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "description": "消息状态码"
+          },
+          "msg": {
+            "type": "string",
+            "description": "消息内容"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ServiceInfoVo",
+            "description": "数据对象"
+          }
+        }
+      },
+      "ServiceInfoVo": {
+        "type": "object",
+        "description": "服务信息列表展示",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "主键ID"
+          },
+          "serverId": {
+            "type": "string",
+            "description": "关联的服务器主键ID"
+          },
+          "serviceName": {
+            "type": "string",
+            "description": "服务名称"
+          },
+          "serviceType": {
+            "type": "string",
+            "description": "服务类型",
+            "enum": ["docker", "systemctl", "custom"]
+          },
+          "description": {
+            "type": "string",
+            "description": "服务描述"
+          },
+          "startCommand": {
+            "type": "string",
+            "description": "自定义启动命令"
+          },
+          "stopCommand": {
+            "type": "string",
+            "description": "自定义停止命令"
+          },
+          "restartCommand": {
+            "type": "string",
+            "description": "自定义重启命令"
+          },
+          "statusCommand": {
+            "type": "string",
+            "description": "自定义查看状态命令"
+          }
+        },
+        "required": ["description", "id", "serverId", "serviceName", "serviceType"]
+      },
+      "RListServiceInfoVo": {
+        "type": "object",
+        "description": "响应信息主体",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "description": "消息状态码"
+          },
+          "msg": {
+            "type": "string",
+            "description": "消息内容"
+          },
+          "data": {
+            "type": "array",
+            "description": "数据对象",
+            "items": {
+              "$ref": "#/components/schemas/ServiceInfoVo"
+            }
+          }
+        }
+      },
+      "RServerAssetVo": {
+        "type": "object",
+        "description": "响应信息主体",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "description": "消息状态码"
+          },
+          "msg": {
+            "type": "string",
+            "description": "消息内容"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ServerAssetVo",
+            "description": "数据对象"
+          }
+        }
+      },
+      "ServerAssetVo": {
+        "type": "object",
+        "description": "服务器资产列表展示",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "主键ID"
+          },
+          "hostIp": {
+            "type": "string",
+            "description": "服务器IP地址"
+          },
+          "hostName": {
+            "type": "string",
+            "description": "主机别名"
+          },
+          "sshPort": {
+            "type": "integer",
+            "format": "int32",
+            "description": "SSH端口"
+          },
+          "sshUsername": {
+            "type": "string",
+            "description": "SSH登录用户名"
+          },
+          "nodeExporterPort": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Node Exporter 指标采集端口"
+          }
+        },
+        "required": ["hostIp", "hostName", "id", "nodeExporterPort", "sshPort", "sshUsername"]
+      },
+      "RListServerAssetVo": {
+        "type": "object",
+        "description": "响应信息主体",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "description": "消息状态码"
+          },
+          "msg": {
+            "type": "string",
+            "description": "消息内容"
+          },
+          "data": {
+            "type": "array",
+            "description": "数据对象",
+            "items": {
+              "$ref": "#/components/schemas/ServerAssetVo"
+            }
+          }
+        }
+      },
+      "ControlExecuteBo": {
+        "type": "object",
+        "description": "服务管控执行请求",
+        "properties": {
+          "serviceId": {
+            "type": "string",
+            "description": "服务ID"
+          },
+          "action": {
+            "type": "string",
+            "description": "操作类型",
+            "enum": ["start", "stop", "restart"]
+          }
+        },
+        "required": ["action", "serviceId"]
+      },
+      "NetworkUsageVo": {
+        "type": "object",
+        "description": "网络流量数据",
+        "properties": {
+          "rx": {
+            "type": "array",
+            "description": "接收速率（bps）",
+            "items": {
+              "$ref": "#/components/schemas/MetricPoint"
+            }
+          },
+          "tx": {
+            "type": "array",
+            "description": "发送速率（bps）",
+            "items": {
+              "$ref": "#/components/schemas/MetricPoint"
+            }
+          }
+        },
+        "required": ["rx", "tx"]
+      },
+      "RNetworkUsageVo": {
+        "type": "object",
+        "description": "响应信息主体",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "description": "消息状态码"
+          },
+          "msg": {
+            "type": "string",
+            "description": "消息内容"
+          },
+          "data": {
+            "$ref": "#/components/schemas/NetworkUsageVo",
+            "description": "数据对象"
+          }
+        }
+      }
+    },
+    "responses": {},
+    "securitySchemes": {}
+  },
+  "servers": [],
+  "security": []
+}
