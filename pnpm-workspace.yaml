@@ -1,4 +1,5 @@
-packages: []
+packages:
+  - '.'
 
 catalog:
   '@alova/wormhole': ^1.5.0
