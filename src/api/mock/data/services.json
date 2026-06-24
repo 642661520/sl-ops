@@ -1,0 +1,80 @@
+[
+  {
+    "id": "svc-001",
+    "serverId": "srv-001",
+    "serviceName": "nginx-web",
+    "serviceType": "systemctl",
+    "description": "Nginx Web 服务，托管前端应用和静态资源"
+  },
+  {
+    "id": "svc-002",
+    "serverId": "srv-001",
+    "serviceName": "mysql-db",
+    "serviceType": "docker",
+    "description": "MySQL 8.0 数据库服务，用于业务数据存储"
+  },
+  {
+    "id": "svc-003",
+    "serverId": "srv-002",
+    "serviceName": "redis-cache",
+    "serviceType": "docker",
+    "description": "Redis 7 缓存服务，用于会话管理和热点数据缓存"
+  },
+  {
+    "id": "svc-004",
+    "serverId": "srv-002",
+    "serviceName": "jenkins-ci",
+    "serviceType": "docker",
+    "description": "Jenkins CI/CD 流水线服务"
+  },
+  {
+    "id": "svc-005",
+    "serverId": "srv-003",
+    "serviceName": "prometheus",
+    "serviceType": "systemctl",
+    "description": "Prometheus 监控采集服务"
+  },
+  {
+    "id": "svc-006",
+    "serverId": "srv-003",
+    "serviceName": "grafana-dash",
+    "serviceType": "docker",
+    "description": "Grafana 可视化面板服务"
+  },
+  {
+    "id": "svc-007",
+    "serverId": "srv-004",
+    "serviceName": "kafka-broker",
+    "serviceType": "systemctl",
+    "description": "Kafka 消息队列 Broker"
+  },
+  {
+    "id": "svc-008",
+    "serverId": "srv-004",
+    "serviceName": "log-collector",
+    "serviceType": "custom",
+    "description": "自研日志采集代理，收集应用日志推送至中心",
+    "startCommand": "/opt/logagent/bin/start.sh",
+    "stopCommand": "/opt/logagent/bin/stop.sh",
+    "restartCommand": "/opt/logagent/bin/restart.sh",
+    "statusCommand": "/opt/logagent/bin/status.sh"
+  },
+  {
+    "id": "svc-009",
+    "serverId": "srv-005",
+    "serviceName": "elasticsearch",
+    "serviceType": "docker",
+    "description": "Elasticsearch 8 搜索引擎，日志存储和检索"
+  },
+  {
+    "id": "svc-010",
+    "serverId": "srv-005",
+    "serviceName": "api-gateway",
+    "serviceType": "custom",
+    "description": "自研 API 网关服务，负责流量路由和鉴权",
+    "startCommand": "systemctl start apigateway",
+    "stopCommand": "systemctl stop apigateway",
+    "restartCommand": "systemctl restart apigateway",
+    "statusCommand": "systemctl status apigateway"
+  }
+]

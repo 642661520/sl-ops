@@ -23,10 +23,11 @@
     "changeset:commit": "changeset tag"
   },
   "dependencies": {
+    "@alova/mock": "^2.0.20",
     "@vueuse/core": "catalog:",
     "alova": "catalog:",
     "echarts": "catalog:",
-    "naive-ui": "catalog:",
+    "pinia": "^3.0.4",
     "vue": "catalog:",
     "vue-echarts": "catalog:",
     "vue-router": "catalog:"
@@ -34,6 +35,7 @@
   "devDependencies": {
     "@alova/wormhole": "catalog:",
     "@changesets/cli": "catalog:",
+    "@iconify-json/carbon": "^1.2.23",
     "@types/node": "catalog:",
     "@unocss/preset-attributify": "catalog:",
     "@unocss/preset-wind4": "catalog:",

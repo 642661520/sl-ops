@@ -2,8 +2,10 @@ packages:
   - '.'
 
 catalog:
+  '@alova/mock': ^2.0.0
   '@alova/wormhole': ^1.5.0
   '@changesets/cli': ^2.31.0
+  '@iconify-json/carbon': ^1.2.0
   '@types/node': ^26.0.0
   '@unocss/preset-attributify': ^66.7.0
   '@unocss/preset-wind4': ^66.7.0
@@ -16,10 +18,10 @@ catalog:
   eslint-plugin-oxlint: ^1.71.0
   eslint-plugin-vue: ^10.9.0
   knip: ^6.18.0
-  naive-ui: ^2.44.0
   npm-run-all2: ^9.0.0
   oxfmt: ^0.56.0
   oxlint: ^1.71.0
+  pinia: ^3.0.0
   typescript: ~5.8.0
   unocss: ^66.7.0
   unplugin-auto-import: ^21.0.0

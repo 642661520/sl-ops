@@ -1,0 +1,37 @@
+[
+  {
+    "serverId": "srv-001",
+    "hostName": "prod-web-node-01",
+    "cpuUsage": "23.5",
+    "memoryUsage": "61.2",
+    "diskUsage": "45.8"
+  },
+  {
+    "serverId": "srv-002",
+    "hostName": "prod-app-node-02",
+    "cpuUsage": "47.1",
+    "memoryUsage": "73.8",
+    "diskUsage": "52.3"
+  },
+  {
+    "serverId": "srv-003",
+    "hostName": "monitor-node-01",
+    "cpuUsage": "12.8",
+    "memoryUsage": "35.4",
+    "diskUsage": "28.9"
+  },
+  {
+    "serverId": "srv-004",
+    "hostName": "mq-log-node-02",
+    "cpuUsage": "68.3",
+    "memoryUsage": "82.1",
+    "diskUsage": "71.5"
+  },
+  {
+    "serverId": "srv-005",
+    "hostName": "data-es-node-01",
+    "cpuUsage": "55.7",
+    "memoryUsage": "90.4",
+    "diskUsage": "83.2"
+  }
+]

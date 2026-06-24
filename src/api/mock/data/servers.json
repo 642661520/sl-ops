@@ -1,0 +1,42 @@
+[
+  {
+    "id": "srv-001",
+    "hostIp": "192.168.1.10",
+    "hostName": "prod-web-node-01",
+    "sshPort": 22,
+    "sshUsername": "opsadmin",
+    "nodeExporterPort": 9100
+  },
+  {
+    "id": "srv-002",
+    "hostIp": "192.168.1.11",
+    "hostName": "prod-app-node-02",
+    "sshPort": 22,
+    "sshUsername": "opsadmin",
+    "nodeExporterPort": 9100
+  },
+  {
+    "id": "srv-003",
+    "hostIp": "192.168.2.10",
+    "hostName": "monitor-node-01",
+    "sshPort": 8022,
+    "sshUsername": "monitor",
+    "nodeExporterPort": 9100
+  },
+  {
+    "id": "srv-004",
+    "hostIp": "192.168.2.11",
+    "hostName": "mq-log-node-02",
+    "sshPort": 22,
+    "sshUsername": "opsadmin",
+    "nodeExporterPort": 9101
+  },
+  {
+    "id": "srv-005",
+    "hostIp": "10.0.1.50",
+    "hostName": "data-es-node-01",
+    "sshPort": 22,
+    "sshUsername": "dataops",
+    "nodeExporterPort": 9100
+  }
+]
