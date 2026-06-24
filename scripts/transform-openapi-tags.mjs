@@ -1,40 +1,29 @@
-import { readFileSync, writeFileSync } from 'node:fs'
+import { copyFileSync } from 'node:fs'
 import { resolve, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { removeAuthHeaders, formatTag } from '../alova.shared.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
-// tag 中文名 → 英文模块名 映射
+const srcFile = resolve(__dirname, '../openapi/ops.openapi.json')
+const outFile = resolve(__dirname, '../openapi/ops.openapi.transformed.json')
+
+// 1. 复制原始文件 → 转换产物
+copyFileSync(srcFile, outFile)
+
+// 2. 移除认证 header（避免生成不需要的 Authorization 参数）
+removeAuthHeaders(outFile)
+
+// 3. tag 中文 → 英文映射
 const TAG_MAP = {
   服务信息管理接口: 'service',
   服务器资产管理接口: 'asset',
   服务管控接口: 'service-control',
   监控指标获取接口: 'monitor',
 }
+formatTag(outFile, TAG_MAP)
 
-const inputFile = resolve(__dirname, '../openapi/ops.openapi.json')
-const outputFile = resolve(__dirname, '../openapi/ops.openapi.transformed.json')
+// 4. 拍平 allOf + discriminator（如果项目有基类 schema，在这里调用）
+// flattenAllOf(outFile, 'BaseSchemaName')
 
-const spec = JSON.parse(readFileSync(inputFile, 'utf-8'))
-
-// 重命名 tags 定义
-if (spec.tags) {
-  for (const tag of spec.tags) {
-    if (TAG_MAP[tag.name]) {
-      console.log(`  tag: "${tag.name}" → "${TAG_MAP[tag.name]}"`)
-      tag.name = TAG_MAP[tag.name]
-    }
-  }
-}
-
-// 重命名 paths 中的 tags 引用
-for (const [, pathItem] of Object.entries(spec.paths)) {
-  for (const [, operation] of Object.entries(pathItem)) {
-    if (operation.tags) {
-      operation.tags = operation.tags.map((tag) => TAG_MAP[tag] || tag)
-    }
-  }
-}
-
-writeFileSync(outputFile, JSON.stringify(spec, null, 2), 'utf-8')
-console.log(`\nDone → ${outputFile}`)
+console.log(`Done → ${outFile}`)
