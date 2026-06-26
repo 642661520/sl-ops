@@ -1,35 +1,37 @@
 import { defineMock } from '@alova/mock'
 
-// 模拟服务运行状态存储
-const statusMap: Record<string, string> = {
-  'svc-001': 'running',
-  'svc-002': 'running',
-  'svc-003': 'running',
-  'svc-004': 'running',
-  'svc-005': 'running',
-  'svc-006': 'stopped',
-  'svc-007': 'running',
-  'svc-008': 'running',
-  'svc-009': 'stopped',
-  'svc-010': 'running',
+// 模拟服务运行状态存储 (1: 运行中, 2: 已停止, 3: 异常, 4: 部分运行)
+const statusMap: Record<string, number> = {
+  'svc-001': 1,
+  'svc-002': 1,
+  'svc-003': 1,
+  'svc-004': 1,
+  'svc-005': 1,
+  'svc-006': 2,
+  'svc-007': 1,
+  'svc-008': 1,
+  'svc-009': 2,
+  'svc-010': 1,
 }
 
 export default defineMock(
   {
-    '[POST]/control/execute': ({ data }: { data: { serviceId: string; action: string } }) => {
+    '[POST]/api/control/execute': ({ data }: { data: { serviceId: string; action: string } }) => {
       const { serviceId, action } = data
-      if (!statusMap[serviceId]) {
+      if (!(serviceId in statusMap)) {
         return { code: 404, msg: '服务不存在', data: '服务不存在' }
       }
 
-      const actionMap: Record<string, string> = {
-        start: 'running',
-        stop: 'stopped',
-        restart: 'running',
+      const actionMap: Record<string, number> = {
+        start: 1,
+        stop: 2,
+        restart: 1,
       }
 
       // 模拟操作延迟后更新状态
-      statusMap[serviceId] = actionMap[action] || statusMap[serviceId]
+      if (actionMap[action] !== undefined) {
+        statusMap[serviceId] = actionMap[action]
+      }
 
       const actionLabel: Record<string, string> = {
         start: '启动',
@@ -44,14 +46,12 @@ export default defineMock(
       }
     },
 
-    '[GET]/control/status': ({ query }: { query: { serviceId: string } }) => {
+    '[GET]/api/control/status': ({ query }: { query: { serviceId: string } }) => {
       const status = statusMap[query.serviceId]
-      if (!status) {
+      if (status === undefined) {
         return { code: 404, msg: '服务不存在', data: null }
       }
-      // 模拟状态随机变化
-      const statusLabel = status === 'running' ? 'running' : 'stopped'
-      return { code: 200, msg: 'success', data: statusLabel }
+      return { code: 200, msg: 'success', data: status }
     },
   },
   true,

@@ -30,17 +30,13 @@
           <div class="ml-3 flex-shrink-0">
             <span
               class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium"
-              :class="
-                statusMap[svc.id] === 'running'
-                  ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
-                  : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400'
-              "
+              :class="getStatusClass(statusMap[svc.id])"
             >
               <span
                 class="i-carbon-circle-filled text-[8px]"
-                :class="statusMap[svc.id] === 'running' ? 'text-green-500' : 'text-gray-400'"
+                :class="getStatusDotClass(statusMap[svc.id])"
               ></span>
-              {{ statusMap[svc.id] === 'running' ? '运行中' : '已停止' }}
+              {{ getStatusText(statusMap[svc.id]) }}
             </span>
           </div>
         </div>
@@ -124,6 +120,42 @@ const statusMap = ref<Record<string, string>>({})
 const actionLoading = reactive<Record<string, boolean>>({})
 const actionTarget = reactive<Record<string, string>>({})
 
+// 状态码 → 字符串标签 (1: 运行中, 2: 已停止, 3: 异常, 4: 部分运行)
+function statusCodeToLabel(code: number): string {
+  const map: Record<number, string> = { 1: 'running', 2: 'stopped', 3: 'error', 4: 'degraded' }
+  return map[code] || 'stopped'
+}
+
+function getStatusText(status: string) {
+  const map: Record<string, string> = {
+    running: '运行中',
+    stopped: '已停止',
+    error: '异常',
+    degraded: '部分运行',
+  }
+  return map[status] || '已停止'
+}
+
+function getStatusClass(status: string) {
+  if (status === 'running') {
+    return 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+  }
+  if (status === 'degraded') {
+    return 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400'
+  }
+  if (status === 'error') {
+    return 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
+  }
+  return 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400'
+}
+
+function getStatusDotClass(status: string) {
+  if (status === 'running') return 'text-green-500'
+  if (status === 'degraded') return 'text-yellow-500'
+  if (status === 'error') return 'text-red-500'
+  return 'text-gray-400'
+}
+
 function getTypeLabel(type: string) {
   const map: Record<string, string> = { docker: 'Docker', systemctl: 'Systemctl', custom: 'Custom' }
   return map[type] || type
@@ -152,7 +184,7 @@ async function refreshStatuses() {
     services.value.map(async (svc) => {
       try {
         const res = await Apis.serviceControl.getStatus({ params: { serviceId: svc.id } }).send()
-        return { id: svc.id, status: res.data || 'stopped' }
+        return { id: svc.id, status: statusCodeToLabel(res.data ?? 0) }
       } catch {
         return { id: svc.id, status: 'stopped' }
       }

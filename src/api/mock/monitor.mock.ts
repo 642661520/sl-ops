@@ -56,7 +56,7 @@ function getProfile(serverId?: string) {
 
 export default defineMock(
   {
-    '[GET]/monitor/overview': ({ query }: { query: Record<string, string> }) => {
+    '[GET]/api/monitor/overview': ({ query }: { query: Record<string, string> }) => {
       if (query.serverId) {
         const item = overviewData.find(
           (s: Record<string, unknown>) => s.serverId === query.serverId,
@@ -66,7 +66,7 @@ export default defineMock(
       return { code: 200, msg: 'success', data: overviewData }
     },
 
-    '[GET]/monitor/network': ({ query }: { query: Record<string, string> }) => {
+    '[GET]/api/monitor/network': ({ query }: { query: Record<string, string> }) => {
       const p = getProfile(query.serverId)
       const count = 30
       return {
@@ -79,7 +79,7 @@ export default defineMock(
       }
     },
 
-    '[GET]/monitor/memory': ({ query }: { query: Record<string, string> }) => {
+    '[GET]/api/monitor/memory': ({ query }: { query: Record<string, string> }) => {
       const p = getProfile(query.serverId)
       return {
         code: 200,
@@ -88,7 +88,7 @@ export default defineMock(
       }
     },
 
-    '[GET]/monitor/disk': ({ query }: { query: Record<string, string> }) => {
+    '[GET]/api/monitor/disk': ({ query }: { query: Record<string, string> }) => {
       const p = getProfile(query.serverId)
       return {
         code: 200,
@@ -97,7 +97,7 @@ export default defineMock(
       }
     },
 
-    '[GET]/monitor/cpu': ({ query }: { query: Record<string, string> }) => {
+    '[GET]/api/monitor/cpu': ({ query }: { query: Record<string, string> }) => {
       const p = getProfile(query.serverId)
       return {
         code: 200,

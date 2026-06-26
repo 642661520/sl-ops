@@ -6,7 +6,7 @@ let nextId = servers.length + 1
 
 export default defineMock(
   {
-    '[GET]/server/list': ({ query }: { query: Record<string, string> }) => {
+    '[GET]/api/server/list': ({ query }: { query: Record<string, string> }) => {
       let result = [...servers]
       if (query.hostIp) {
         result = result.filter((s) => s.hostIp.includes(query.hostIp))
@@ -17,7 +17,7 @@ export default defineMock(
       return { code: 200, msg: 'success', data: result }
     },
 
-    '[GET]/server/{id}': ({ params }: { params: { id: string } }) => {
+    '[GET]/api/server/{id}': ({ params }: { params: { id: string } }) => {
       const srv = servers.find((s) => s.id === params.id)
       if (!srv) {
         return { code: 404, msg: '服务器不存在', data: null }
@@ -25,7 +25,7 @@ export default defineMock(
       return { code: 200, msg: 'success', data: srv }
     },
 
-    '[POST]/server': ({ data }: { data: Record<string, unknown> }) => {
+    '[POST]/api/server': ({ data }: { data: Record<string, unknown> }) => {
       const newSrv = {
         id: `srv-${String(nextId++).padStart(3, '0')}`,
         hostIp: String(data.hostIp || ''),
@@ -38,7 +38,7 @@ export default defineMock(
       return { code: 200, msg: '创建成功', data: newSrv.id }
     },
 
-    '[PUT]/server': ({ data }: { data: Record<string, unknown> }) => {
+    '[PUT]/api/server': ({ data }: { data: Record<string, unknown> }) => {
       const idx = servers.findIndex((s) => s.id === data.id)
       if (idx === -1) {
         return { code: 404, msg: '服务器不存在', data: false }
@@ -47,7 +47,7 @@ export default defineMock(
       return { code: 200, msg: '更新成功', data: true }
     },
 
-    '[DELETE]/server/{id}': ({ params }: { params: { id: string } }) => {
+    '[DELETE]/api/server/{id}': ({ params }: { params: { id: string } }) => {
       const idx = servers.findIndex((s) => s.id === params.id)
       if (idx === -1) {
         return { code: 404, msg: '服务器不存在', data: false }

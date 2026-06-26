@@ -1,6 +1,6 @@
 /// <reference types='./globals.d.ts' />
 /* tslint:disable */
- 
+/* eslint-disable */
 /**
  * 默认模块 - version 1.0.0
  *
@@ -16,21 +16,21 @@
  * **Do not edit the file manually.**
  */
 export default {
-  'service.update': ['PUT', '/service'],
-  'service.create': ['POST', '/service'],
-  'service.get': ['GET', '/service/{id}'],
-  'service.delete_': ['DELETE', '/service/{id}'],
-  'service.list': ['GET', '/service/list'],
-  'asset.update_1': ['PUT', '/server'],
-  'asset.create_1': ['POST', '/server'],
-  'asset.get_1': ['GET', '/server/{id}'],
-  'asset.delete_1': ['DELETE', '/server/{id}'],
-  'asset.list_1': ['GET', '/server/list'],
-  'serviceControl.executeControl': ['POST', '/control/execute'],
-  'serviceControl.getStatus': ['GET', '/control/status'],
-  'monitor.getOverview': ['GET', '/monitor/overview'],
-  'monitor.getNetworkUsage': ['GET', '/monitor/network'],
-  'monitor.getMemoryUsage': ['GET', '/monitor/memory'],
-  'monitor.getDiskUsage': ['GET', '/monitor/disk'],
-  'monitor.getCpuUsage': ['GET', '/monitor/cpu']
+  'service.list': ['GET', '/api/service/list'],
+  'service.update': ['PUT', '/api/service'],
+  'service.create': ['POST', '/api/service'],
+  'service.get': ['GET', '/api/service/{id}'],
+  'service.delete_': ['DELETE', '/api/service/{id}'],
+  'asset.list_1': ['GET', '/api/server/list'],
+  'asset.update_1': ['PUT', '/api/server'],
+  'asset.create_1': ['POST', '/api/server'],
+  'asset.get_1': ['GET', '/api/server/{id}'],
+  'asset.delete_1': ['DELETE', '/api/server/{id}'],
+  'serviceControl.executeControl': ['POST', '/api/control/execute'],
+  'serviceControl.getStatus': ['GET', '/api/control/status'],
+  'monitor.getOverview': ['GET', '/api/monitor/overview'],
+  'monitor.getMemoryUsage': ['GET', '/api/monitor/memory'],
+  'monitor.getDiskUsage': ['GET', '/api/monitor/disk'],
+  'monitor.getCpuUsage': ['GET', '/api/monitor/cpu'],
+  'monitor.getNetworkUsage': ['GET', '/api/monitor/network']
 };
