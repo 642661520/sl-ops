@@ -1,7 +1,7 @@
 <template>
   <div v-if="totalPages > 1" class="flex items-center justify-center gap-1">
     <button
-      class="cursor-pointer rounded-lg px-2 py-1.5 text-sm text-gray-500 transition-colors hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-40 dark:hover:bg-gray-800"
+      class="cursor-pointer rounded-lg px-2 py-1.5 text-sm text-gray-500 transition-colors hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-40 dark:text-gray-400 dark:hover:bg-gray-800"
       :disabled="current <= 1"
       @click="go(current - 1)"
     >
@@ -20,7 +20,7 @@
       {{ p }}
     </button>
     <button
-      class="cursor-pointer rounded-lg px-2 py-1.5 text-sm text-gray-500 transition-colors hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-40 dark:hover:bg-gray-800"
+      class="cursor-pointer rounded-lg px-2 py-1.5 text-sm text-gray-500 transition-colors hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-40 dark:text-gray-400 dark:hover:bg-gray-800"
       :disabled="current >= totalPages"
       @click="go(current + 1)"
     >

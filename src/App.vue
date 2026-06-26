@@ -43,3 +43,12 @@ function closeDialog() {
 // 由于 auto-import 可能不识别 MESSAGE_KEY/DIALOG_KEY inject,
 // 这里直接在 App 组件中 provide,子组件中使用 inject 获取
 </script>
+
+<style>
+html {
+  color-scheme: light;
+}
+html.dark {
+  color-scheme: dark;
+}
+</style>

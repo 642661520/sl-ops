@@ -14,7 +14,7 @@
               {{ title }}
             </h3>
             <button
-              class="cursor-pointer rounded-lg p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-700"
+              class="cursor-pointer rounded-lg p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-700 dark:hover:text-gray-200"
               @click="handleCancel"
             >
               <span class="i-carbon-close text-lg"></span>

@@ -23,7 +23,7 @@
     />
     <button
       v-if="clearable && modelValue"
-      class="mr-2 cursor-pointer text-gray-400 hover:text-gray-600"
+      class="mr-2 cursor-pointer text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
       @click="handleClear"
     >
       <span class="i-carbon-close text-sm"></span>

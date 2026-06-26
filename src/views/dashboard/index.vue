@@ -164,7 +164,7 @@
               :class="
                 activeTab === tab.key
                   ? 'bg-primary text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-400'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-gray-600'
               "
               @click="activeTab = tab.key"
             >
@@ -255,7 +255,19 @@ const chartTabs = [
   { key: 'network', label: '网络' },
 ]
 
+const isDark = useDark()
+
 const COLORS = ['#4f46e5', '#10b981', '#f59e0b', '#ef4444', '#06b6d4']
+
+// 根据深色模式动态调整 ECharts 样式颜色
+const chartColors = computed(() => ({
+  textColor: isDark.value ? '#6b7280' : '#9ca3af',
+  axisLineColor: isDark.value ? '#374151' : '#e5e7eb',
+  splitLineColor: isDark.value ? '#1f2937' : '#f3f4f6',
+  tooltipBg: isDark.value ? '#1f2937' : '#fff',
+  tooltipBorder: isDark.value ? '#374151' : '#e5e7eb',
+  tooltipText: isDark.value ? '#e5e7eb' : '#374151',
+}))
 
 interface ChartSeries {
   name: string
@@ -266,33 +278,34 @@ const chartSeries = ref<ChartSeries[]>([])
 
 const chartOption = computed(() => {
   if (!chartSeries.value.length) return null
+  const c = chartColors.value
   return {
     grid: { top: 10, right: 20, bottom: 50, left: 50 },
     legend: {
       data: chartSeries.value.map((s) => s.name),
       bottom: 12,
       itemGap: 12,
-      textStyle: { fontSize: 10, color: '#9ca3af' },
+      textStyle: { fontSize: 10, color: c.textColor },
     },
     xAxis: {
       type: 'time' as const,
-      axisLabel: { fontSize: 10, color: '#9ca3af' },
-      axisLine: { lineStyle: { color: '#e5e7eb' } },
+      axisLabel: { fontSize: 10, color: c.textColor },
+      axisLine: { lineStyle: { color: c.axisLineColor } },
     },
     yAxis: {
       type: 'value' as const,
       axisLabel: {
         fontSize: 10,
-        color: '#9ca3af',
+        color: c.textColor,
         formatter: activeTab.value === 'network' ? '{value} bps' : '{value}%',
       },
-      splitLine: { lineStyle: { color: '#f3f4f6' } },
+      splitLine: { lineStyle: { color: c.splitLineColor } },
     },
     tooltip: {
       trigger: 'axis' as const,
-      backgroundColor: '#fff',
-      borderColor: '#e5e7eb',
-      textStyle: { color: '#374151', fontSize: 12 },
+      backgroundColor: c.tooltipBg,
+      borderColor: c.tooltipBorder,
+      textStyle: { color: c.tooltipText, fontSize: 12 },
       valueFormatter: (value: unknown) => {
         const unit = activeTab.value === 'network' ? ' bps' : '%'
         return `${value}${unit}`

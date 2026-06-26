@@ -41,8 +41,8 @@ const variantClasses = computed(() => {
     primary: 'bg-primary text-white hover:bg-primary-hover active:bg-primary-pressed shadow-sm',
     default:
       'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 active:bg-gray-100 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-700',
-    danger: 'bg-red-500 text-white hover:bg-red-600 active:bg-red-700 shadow-sm',
-    text: 'text-gray-600 hover:bg-gray-100 active:bg-gray-200 dark:text-gray-400 dark:hover:bg-gray-800',
+    danger: 'bg-red-500 text-white hover:bg-red-600 active:bg-red-700 dark:hover:bg-red-400 dark:active:bg-red-300 shadow-sm',
+    text: 'text-gray-600 hover:bg-gray-100 active:bg-gray-200 dark:text-gray-400 dark:hover:bg-gray-800 dark:active:bg-gray-700',
   }
   return map[props.variant] || map.default
 })
