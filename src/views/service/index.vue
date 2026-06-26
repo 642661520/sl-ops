@@ -290,7 +290,7 @@ async function loadServers() {
   try {
     const res = await Apis.asset.list_1({ params: {} }).send()
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const list = res.data || [] as any[]
+    const list = res.data || ([] as any[])
     const map: Record<string, string> = {}
     serverOptions.value = list.map((s: any) => {
       map[s.id] = s.hostName

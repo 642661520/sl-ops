@@ -70,7 +70,9 @@
             <span class="i-carbon-warning-alt text-2xl text-red-600 dark:text-red-400"></span>
           </div>
           <div>
-            <p class="text-2xl font-bold text-gray-900 dark:text-gray-100">{{ stats.highMemory }}</p>
+            <p class="text-2xl font-bold text-gray-900 dark:text-gray-100">
+              {{ stats.highMemory }}
+            </p>
             <p class="text-sm text-gray-500 dark:text-gray-400">内存告警 (&gt;80%)</p>
           </div>
         </div>
@@ -149,11 +151,7 @@
           <div class="flex items-center gap-2">
             <span class="text-xs text-gray-400">步长</span>
             <div class="w-24">
-              <app-select
-                v-model="selectedStep"
-                :options="stepOptions"
-                placeholder="步长"
-              />
+              <app-select v-model="selectedStep" :options="stepOptions" placeholder="步长" />
             </div>
           </div>
           <div class="flex gap-1">
