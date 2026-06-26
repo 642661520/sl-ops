@@ -2,79 +2,477 @@
   {
     "id": "svc-001",
     "serverId": "srv-001",
-    "serviceName": "nginx-web",
+    "serviceName": "nginx-web-001",
     "serviceType": "systemctl",
-    "description": "Nginx Web 服务，托管前端应用和静态资源"
+    "description": "nginx web 服务实例 #1"
   },
   {
     "id": "svc-002",
     "serverId": "srv-001",
-    "serviceName": "mysql-db",
+    "serviceName": "mysql-db-002",
     "serviceType": "docker",
-    "description": "MySQL 8.0 数据库服务，用于业务数据存储"
+    "description": "mysql db 服务实例 #2"
   },
   {
     "id": "svc-003",
-    "serverId": "srv-002",
-    "serviceName": "redis-cache",
+    "serverId": "srv-001",
+    "serviceName": "redis-cache-003",
     "serviceType": "docker",
-    "description": "Redis 7 缓存服务，用于会话管理和热点数据缓存"
+    "description": "redis cache 服务实例 #3"
   },
   {
     "id": "svc-004",
     "serverId": "srv-002",
-    "serviceName": "jenkins-ci",
+    "serviceName": "jenkins-ci-004",
     "serviceType": "docker",
-    "description": "Jenkins CI/CD 流水线服务"
+    "description": "jenkins ci 服务实例 #4"
   },
   {
     "id": "svc-005",
-    "serverId": "srv-003",
-    "serviceName": "prometheus",
+    "serverId": "srv-002",
+    "serviceName": "prometheus-005",
     "serviceType": "systemctl",
-    "description": "Prometheus 监控采集服务"
+    "description": "prometheus 服务实例 #5"
   },
   {
     "id": "svc-006",
-    "serverId": "srv-003",
-    "serviceName": "grafana-dash",
+    "serverId": "srv-002",
+    "serviceName": "grafana-dash-006",
     "serviceType": "docker",
-    "description": "Grafana 可视化面板服务"
+    "description": "grafana dash 服务实例 #6"
   },
   {
     "id": "svc-007",
-    "serverId": "srv-004",
-    "serviceName": "kafka-broker",
+    "serverId": "srv-003",
+    "serviceName": "kafka-broker-007",
     "serviceType": "systemctl",
-    "description": "Kafka 消息队列 Broker"
+    "description": "kafka broker 服务实例 #7"
   },
   {
     "id": "svc-008",
-    "serverId": "srv-004",
-    "serviceName": "log-collector",
+    "serverId": "srv-003",
+    "serviceName": "log-collector-008",
     "serviceType": "custom",
-    "description": "自研日志采集代理，收集应用日志推送至中心",
-    "startCommand": "/opt/logagent/bin/start.sh",
-    "stopCommand": "/opt/logagent/bin/stop.sh",
-    "restartCommand": "/opt/logagent/bin/restart.sh",
-    "statusCommand": "/opt/logagent/bin/status.sh"
+    "description": "log collector 服务实例 #8",
+    "startCommand": "/opt/log-collector/bin/start.sh",
+    "stopCommand": "/opt/log-collector/bin/stop.sh",
+    "restartCommand": "/opt/log-collector/bin/restart.sh",
+    "statusCommand": "/opt/log-collector/bin/status.sh"
   },
   {
     "id": "svc-009",
-    "serverId": "srv-005",
-    "serviceName": "elasticsearch",
+    "serverId": "srv-003",
+    "serviceName": "elasticsearch-009",
     "serviceType": "docker",
-    "description": "Elasticsearch 8 搜索引擎，日志存储和检索"
+    "description": "elasticsearch 服务实例 #9"
   },
   {
     "id": "svc-010",
-    "serverId": "srv-005",
-    "serviceName": "api-gateway",
+    "serverId": "srv-004",
+    "serviceName": "api-gateway-010",
     "serviceType": "custom",
-    "description": "自研 API 网关服务，负责流量路由和鉴权",
-    "startCommand": "systemctl start apigateway",
-    "stopCommand": "systemctl stop apigateway",
-    "restartCommand": "systemctl restart apigateway",
-    "statusCommand": "systemctl status apigateway"
+    "description": "api gateway 服务实例 #10",
+    "startCommand": "/opt/api-gateway/bin/start.sh",
+    "stopCommand": "/opt/api-gateway/bin/stop.sh",
+    "restartCommand": "/opt/api-gateway/bin/restart.sh",
+    "statusCommand": "/opt/api-gateway/bin/status.sh"
+  },
+  {
+    "id": "svc-011",
+    "serverId": "srv-004",
+    "serviceName": "postgres-db-011",
+    "serviceType": "docker",
+    "description": "postgres db 服务实例 #11"
+  },
+  {
+    "id": "svc-012",
+    "serverId": "srv-004",
+    "serviceName": "rabbitmq-012",
+    "serviceType": "docker",
+    "description": "rabbitmq 服务实例 #12"
+  },
+  {
+    "id": "svc-013",
+    "serverId": "srv-005",
+    "serviceName": "vault-secrets-013",
+    "serviceType": "systemctl",
+    "description": "vault secrets 服务实例 #13"
+  },
+  {
+    "id": "svc-014",
+    "serverId": "srv-005",
+    "serviceName": "consul-014",
+    "serviceType": "docker",
+    "description": "consul 服务实例 #14"
+  },
+  {
+    "id": "svc-015",
+    "serverId": "srv-005",
+    "serviceName": "etcd-015",
+    "serviceType": "docker",
+    "description": "etcd 服务实例 #15"
+  },
+  {
+    "id": "svc-016",
+    "serverId": "srv-006",
+    "serviceName": "zipkin-016",
+    "serviceType": "docker",
+    "description": "zipkin 服务实例 #16"
+  },
+  {
+    "id": "svc-017",
+    "serverId": "srv-006",
+    "serviceName": "jaeger-017",
+    "serviceType": "docker",
+    "description": "jaeger 服务实例 #17"
+  },
+  {
+    "id": "svc-018",
+    "serverId": "srv-006",
+    "serviceName": "fluentd-018",
+    "serviceType": "custom",
+    "description": "fluentd 服务实例 #18",
+    "startCommand": "/opt/fluentd/bin/start.sh",
+    "stopCommand": "/opt/fluentd/bin/stop.sh",
+    "restartCommand": "/opt/fluentd/bin/restart.sh",
+    "statusCommand": "/opt/fluentd/bin/status.sh"
+  },
+  {
+    "id": "svc-019",
+    "serverId": "srv-007",
+    "serviceName": "filebeat-019",
+    "serviceType": "custom",
+    "description": "filebeat 服务实例 #19",
+    "startCommand": "/opt/filebeat/bin/start.sh",
+    "stopCommand": "/opt/filebeat/bin/stop.sh",
+    "restartCommand": "/opt/filebeat/bin/restart.sh",
+    "statusCommand": "/opt/filebeat/bin/status.sh"
+  },
+  {
+    "id": "svc-020",
+    "serverId": "srv-007",
+    "serviceName": "metricbeat-020",
+    "serviceType": "systemctl",
+    "description": "metricbeat 服务实例 #20"
+  },
+  {
+    "id": "svc-021",
+    "serverId": "srv-007",
+    "serviceName": "alertmanager-021",
+    "serviceType": "systemctl",
+    "description": "alertmanager 服务实例 #21"
+  },
+  {
+    "id": "svc-022",
+    "serverId": "srv-008",
+    "serviceName": "blackbox-exporter-022",
+    "serviceType": "docker",
+    "description": "blackbox exporter 服务实例 #22"
+  },
+  {
+    "id": "svc-023",
+    "serverId": "srv-008",
+    "serviceName": "node-exporter-023",
+    "serviceType": "systemctl",
+    "description": "node exporter 服务实例 #23"
+  },
+  {
+    "id": "svc-024",
+    "serverId": "srv-008",
+    "serviceName": "cadvisor-024",
+    "serviceType": "docker",
+    "description": "cadvisor 服务实例 #24"
+  },
+  {
+    "id": "svc-025",
+    "serverId": "srv-009",
+    "serviceName": "traefik-025",
+    "serviceType": "docker",
+    "description": "traefik 服务实例 #25"
+  },
+  {
+    "id": "svc-026",
+    "serverId": "srv-009",
+    "serviceName": "haproxy-026",
+    "serviceType": "systemctl",
+    "description": "haproxy 服务实例 #26"
+  },
+  {
+    "id": "svc-027",
+    "serverId": "srv-009",
+    "serviceName": "envoy-027",
+    "serviceType": "docker",
+    "description": "envoy 服务实例 #27"
+  },
+  {
+    "id": "svc-028",
+    "serverId": "srv-010",
+    "serviceName": "istio-proxy-028",
+    "serviceType": "docker",
+    "description": "istio proxy 服务实例 #28"
+  },
+  {
+    "id": "svc-029",
+    "serverId": "srv-010",
+    "serviceName": "linkerd-029",
+    "serviceType": "docker",
+    "description": "linkerd 服务实例 #29"
+  },
+  {
+    "id": "svc-030",
+    "serverId": "srv-010",
+    "serviceName": "kong-030",
+    "serviceType": "docker",
+    "description": "kong 服务实例 #30"
+  },
+  {
+    "id": "svc-031",
+    "serverId": "srv-011",
+    "serviceName": "sonarqube-031",
+    "serviceType": "docker",
+    "description": "sonarqube 服务实例 #31"
+  },
+  {
+    "id": "svc-032",
+    "serverId": "srv-011",
+    "serviceName": "nexus-032",
+    "serviceType": "docker",
+    "description": "nexus 服务实例 #32"
+  },
+  {
+    "id": "svc-033",
+    "serverId": "srv-011",
+    "serviceName": "artifactory-033",
+    "serviceType": "docker",
+    "description": "artifactory 服务实例 #33"
+  },
+  {
+    "id": "svc-034",
+    "serverId": "srv-012",
+    "serviceName": "gitlab-runner-034",
+    "serviceType": "custom",
+    "description": "gitlab runner 服务实例 #34",
+    "startCommand": "/opt/gitlab-runner/bin/start.sh",
+    "stopCommand": "/opt/gitlab-runner/bin/stop.sh",
+    "restartCommand": "/opt/gitlab-runner/bin/restart.sh",
+    "statusCommand": "/opt/gitlab-runner/bin/status.sh"
+  },
+  {
+    "id": "svc-035",
+    "serverId": "srv-012",
+    "serviceName": "drone-runner-035",
+    "serviceType": "custom",
+    "description": "drone runner 服务实例 #35",
+    "startCommand": "/opt/drone-runner/bin/start.sh",
+    "stopCommand": "/opt/drone-runner/bin/stop.sh",
+    "restartCommand": "/opt/drone-runner/bin/restart.sh",
+    "statusCommand": "/opt/drone-runner/bin/status.sh"
+  },
+  {
+    "id": "svc-036",
+    "serverId": "srv-012",
+    "serviceName": "ansible-036",
+    "serviceType": "custom",
+    "description": "ansible 服务实例 #36",
+    "startCommand": "/opt/ansible/bin/start.sh",
+    "stopCommand": "/opt/ansible/bin/stop.sh",
+    "restartCommand": "/opt/ansible/bin/restart.sh",
+    "statusCommand": "/opt/ansible/bin/status.sh"
+  },
+  {
+    "id": "svc-037",
+    "serverId": "srv-013",
+    "serviceName": "terraform-037",
+    "serviceType": "custom",
+    "description": "terraform 服务实例 #37",
+    "startCommand": "/opt/terraform/bin/start.sh",
+    "stopCommand": "/opt/terraform/bin/stop.sh",
+    "restartCommand": "/opt/terraform/bin/restart.sh",
+    "statusCommand": "/opt/terraform/bin/status.sh"
+  },
+  {
+    "id": "svc-038",
+    "serverId": "srv-013",
+    "serviceName": "packer-038",
+    "serviceType": "custom",
+    "description": "packer 服务实例 #38",
+    "startCommand": "/opt/packer/bin/start.sh",
+    "stopCommand": "/opt/packer/bin/stop.sh",
+    "restartCommand": "/opt/packer/bin/restart.sh",
+    "statusCommand": "/opt/packer/bin/status.sh"
+  },
+  {
+    "id": "svc-039",
+    "serverId": "srv-013",
+    "serviceName": "vault-039",
+    "serviceType": "systemctl",
+    "description": "vault 服务实例 #39"
+  },
+  {
+    "id": "svc-040",
+    "serverId": "srv-014",
+    "serviceName": "boundary-040",
+    "serviceType": "systemctl",
+    "description": "boundary 服务实例 #40"
+  },
+  {
+    "id": "svc-041",
+    "serverId": "srv-014",
+    "serviceName": "minio-041",
+    "serviceType": "docker",
+    "description": "minio 服务实例 #41"
+  },
+  {
+    "id": "svc-042",
+    "serverId": "srv-014",
+    "serviceName": "ceph-mon-042",
+    "serviceType": "systemctl",
+    "description": "ceph mon 服务实例 #42"
+  },
+  {
+    "id": "svc-043",
+    "serverId": "srv-015",
+    "serviceName": "glusterfs-043",
+    "serviceType": "systemctl",
+    "description": "glusterfs 服务实例 #43"
+  },
+  {
+    "id": "svc-044",
+    "serverId": "srv-015",
+    "serviceName": "nfs-server-044",
+    "serviceType": "systemctl",
+    "description": "nfs server 服务实例 #44"
+  },
+  {
+    "id": "svc-045",
+    "serverId": "srv-015",
+    "serviceName": "rsyslog-045",
+    "serviceType": "custom",
+    "description": "rsyslog 服务实例 #45",
+    "startCommand": "/opt/rsyslog/bin/start.sh",
+    "stopCommand": "/opt/rsyslog/bin/stop.sh",
+    "restartCommand": "/opt/rsyslog/bin/restart.sh",
+    "statusCommand": "/opt/rsyslog/bin/status.sh"
+  },
+  {
+    "id": "svc-046",
+    "serverId": "srv-016",
+    "serviceName": "splunk-forwarder-046",
+    "serviceType": "custom",
+    "description": "splunk forwarder 服务实例 #46",
+    "startCommand": "/opt/splunk-forwarder/bin/start.sh",
+    "stopCommand": "/opt/splunk-forwarder/bin/stop.sh",
+    "restartCommand": "/opt/splunk-forwarder/bin/restart.sh",
+    "statusCommand": "/opt/splunk-forwarder/bin/status.sh"
+  },
+  {
+    "id": "svc-047",
+    "serverId": "srv-016",
+    "serviceName": "telegraf-047",
+    "serviceType": "systemctl",
+    "description": "telegraf 服务实例 #47"
+  },
+  {
+    "id": "svc-048",
+    "serverId": "srv-016",
+    "serviceName": "influxdb-048",
+    "serviceType": "docker",
+    "description": "influxdb 服务实例 #48"
+  },
+  {
+    "id": "svc-049",
+    "serverId": "srv-017",
+    "serviceName": "chronograf-049",
+    "serviceType": "docker",
+    "description": "chronograf 服务实例 #49"
+  },
+  {
+    "id": "svc-050",
+    "serverId": "srv-017",
+    "serviceName": "kapacitor-050",
+    "serviceType": "docker",
+    "description": "kapacitor 服务实例 #50"
+  },
+  {
+    "id": "svc-051",
+    "serverId": "srv-017",
+    "serviceName": "openldap-051",
+    "serviceType": "docker",
+    "description": "openldap 服务实例 #51"
+  },
+  {
+    "id": "svc-052",
+    "serverId": "srv-018",
+    "serviceName": "keycloak-052",
+    "serviceType": "docker",
+    "description": "keycloak 服务实例 #52"
+  },
+  {
+    "id": "svc-053",
+    "serverId": "srv-018",
+    "serviceName": "freeipa-053",
+    "serviceType": "systemctl",
+    "description": "freeipa 服务实例 #53"
+  },
+  {
+    "id": "svc-054",
+    "serverId": "srv-018",
+    "serviceName": "bind-dns-054",
+    "serviceType": "systemctl",
+    "description": "bind dns 服务实例 #54"
+  },
+  {
+    "id": "svc-055",
+    "serverId": "srv-019",
+    "serviceName": "dhcpd-055",
+    "serviceType": "systemctl",
+    "description": "dhcpd 服务实例 #55"
+  },
+  {
+    "id": "svc-056",
+    "serverId": "srv-019",
+    "serviceName": "ntpd-056",
+    "serviceType": "systemctl",
+    "description": "ntpd 服务实例 #56"
+  },
+  {
+    "id": "svc-057",
+    "serverId": "srv-019",
+    "serviceName": "squid-proxy-057",
+    "serviceType": "systemctl",
+    "description": "squid proxy 服务实例 #57"
+  },
+  {
+    "id": "svc-058",
+    "serverId": "srv-020",
+    "serviceName": "openvpn-058",
+    "serviceType": "custom",
+    "description": "openvpn 服务实例 #58",
+    "startCommand": "/opt/openvpn/bin/start.sh",
+    "stopCommand": "/opt/openvpn/bin/stop.sh",
+    "restartCommand": "/opt/openvpn/bin/restart.sh",
+    "statusCommand": "/opt/openvpn/bin/status.sh"
+  },
+  {
+    "id": "svc-059",
+    "serverId": "srv-020",
+    "serviceName": "wireguard-059",
+    "serviceType": "custom",
+    "description": "wireguard 服务实例 #59",
+    "startCommand": "/opt/wireguard/bin/start.sh",
+    "stopCommand": "/opt/wireguard/bin/stop.sh",
+    "restartCommand": "/opt/wireguard/bin/restart.sh",
+    "statusCommand": "/opt/wireguard/bin/status.sh"
+  },
+  {
+    "id": "svc-060",
+    "serverId": "srv-020",
+    "serviceName": "frp-060",
+    "serviceType": "custom",
+    "description": "frp 服务实例 #60",
+    "startCommand": "/opt/frp/bin/start.sh",
+    "stopCommand": "/opt/frp/bin/stop.sh",
+    "restartCommand": "/opt/frp/bin/restart.sh",
+    "statusCommand": "/opt/frp/bin/status.sh"
   }
 ]

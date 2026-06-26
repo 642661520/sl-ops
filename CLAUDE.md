@@ -91,5 +91,4 @@ src/
 | 变量                | 说明           |
 | ------------------- | -------------- |
 | `VITE_API_BASE_URL` | API 基础路径   |
-| `VITE_SERVICE_PORT` | 开发服务器端口 |
 | `VITE_MOCK`         | 是否启用 Mock  |

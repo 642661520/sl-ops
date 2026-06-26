@@ -37,7 +37,7 @@
         </template>
         <div class="w-36">
           <button
-            class="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-gray-700 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
+            class="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-left text-sm text-gray-700 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
             @click="handleLogout"
           >
             <span class="i-carbon-logout text-base"></span>

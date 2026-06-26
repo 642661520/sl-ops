@@ -1,11 +1,13 @@
 <template>
   <div class="page-container">
-    <div class="mb-6 flex items-center justify-between">
-      <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">服务管控</h1>
-      <app-button variant="default" size="sm" @click="refreshStatuses">
-        <span class="i-carbon-renew" :class="{ 'animate-spin': refreshing }"></span>
-        刷新状态
-      </app-button>
+    <div class="sticky top-0 z-10 -mx-4 -mt-4 mb-6 bg-gray-50 px-4 pb-3 pt-4 dark:bg-gray-900">
+      <div class="flex items-center justify-between">
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">服务管控</h1>
+        <app-button variant="default" size="sm" @click="refreshStatuses">
+          <span class="i-carbon-renew" :class="{ 'animate-spin': refreshing }"></span>
+          刷新状态
+        </app-button>
+      </div>
     </div>
 
     <!-- 服务卡片网格 -->

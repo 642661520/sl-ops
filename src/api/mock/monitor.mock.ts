@@ -1,16 +1,26 @@
 import { defineMock } from '@alova/mock'
 import overviewData from './data/overview.json'
+import serversData from './data/servers.json'
 
-// 每台服务器的基准值（对应 overview 数据）
+// 根据服务器数据动态生成基准值
 const serverProfiles: Record<
   string,
   { cpu: number; memory: number; disk: number; rx: number; tx: number }
-> = {
-  'srv-001': { cpu: 23, memory: 61, disk: 45, rx: 35, tx: 20 },
-  'srv-002': { cpu: 47, memory: 73, disk: 52, rx: 60, tx: 45 },
-  'srv-003': { cpu: 12, memory: 35, disk: 28, rx: 10, tx: 8 },
-  'srv-004': { cpu: 68, memory: 82, disk: 71, rx: 80, tx: 65 },
-  'srv-005': { cpu: 55, memory: 90, disk: 83, rx: 50, tx: 35 },
+> = {}
+for (const s of serversData as { id: string }[]) {
+  // 用 id 的 hashCode 生成稳定的基准值
+  let hash = 0
+  for (let i = 0; i < s.id.length; i++) {
+    hash = ((hash << 5) - hash + s.id.charCodeAt(i)) | 0
+  }
+  const absHash = Math.abs(hash)
+  serverProfiles[s.id] = {
+    cpu: 10 + (absHash % 70),
+    memory: 20 + (absHash % 65),
+    disk: 15 + (absHash % 60),
+    rx: 5 + (absHash % 85),
+    tx: 3 + (absHash % 60),
+  }
 }
 
 // 生成模拟时序数据点
@@ -33,7 +43,7 @@ function getProfile(serverId?: string) {
   }
   // 全部服务器：取平均值
   const keys = Object.keys(serverProfiles)
-  const avg = (field: keyof (typeof serverProfiles)['srv-001']) =>
+  const avg = (field: keyof (typeof serverProfiles)[string]) =>
     keys.reduce((sum, k) => sum + serverProfiles[k][field], 0) / keys.length
   return {
     cpu: avg('cpu'),

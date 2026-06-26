@@ -1,6 +1,6 @@
 <template>
   <button
-    class="inline-flex items-center justify-center gap-1.5 rounded-lg font-medium transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 disabled:cursor-not-allowed"
+    class="inline-flex items-center justify-center gap-1.5 rounded-lg font-medium transition-all duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 disabled:cursor-not-allowed"
     :class="[
       variantClasses,
       sizeClasses,

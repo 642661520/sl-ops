@@ -1,7 +1,7 @@
 <template>
   <div ref="selectRef" class="relative">
     <button
-      class="flex w-full items-center justify-between rounded-lg border px-3 py-2 text-sm transition-all duration-200"
+      class="flex w-full cursor-pointer items-center justify-between rounded-lg border px-3 py-2 text-sm transition-all duration-200"
       :class="{
         'border-gray-300 bg-white dark:border-gray-600 dark:bg-gray-800': !disabled,
         'border-gray-200 bg-gray-100 dark:border-gray-700 dark:bg-gray-900': disabled,
@@ -31,7 +31,7 @@
         <button
           v-for="opt in options"
           :key="opt.value"
-          class="w-full px-3 py-2 text-left text-sm transition-colors hover:bg-gray-100 dark:hover:bg-gray-700"
+          class="w-full cursor-pointer px-3 py-2 text-left text-sm transition-colors hover:bg-gray-100 dark:hover:bg-gray-700"
           :class="{
             'bg-primary/10 text-primary': opt.value === modelValue,
             'text-gray-700 dark:text-gray-300': opt.value !== modelValue,

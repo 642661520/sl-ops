@@ -1,32 +1,34 @@
 <template>
   <div class="page-container">
-    <div class="mb-6 flex items-center justify-between">
-      <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">服务管理</h1>
-      <app-button variant="primary" size="sm" @click="openCreate">
-        <span class="i-carbon-add"></span>
-        新增服务
-      </app-button>
-    </div>
-
-    <!-- 搜索栏 -->
-    <app-card class="mb-6">
-      <div class="flex flex-wrap gap-3">
-        <div class="w-56">
-          <app-input v-model="searchName" placeholder="搜索服务名称" :clearable="true">
-            <template #prefix>
-              <span class="i-carbon-search"></span>
-            </template>
-          </app-input>
-        </div>
-        <div class="w-40">
-          <app-select v-model="searchType" :options="typeOptions" placeholder="服务类型" />
-        </div>
-        <app-button variant="default" size="sm" @click="loadData">
-          <span class="i-carbon-search"></span>
-          查询
+    <div class="sticky top-0 z-10 -mx-4 -mt-4 mb-6 bg-gray-50 px-4 pb-3 pt-4 dark:bg-gray-900">
+      <div class="mb-4 flex items-center justify-between">
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">服务管理</h1>
+        <app-button variant="primary" size="sm" @click="openCreate">
+          <span class="i-carbon-add"></span>
+          新增服务
         </app-button>
       </div>
-    </app-card>
+
+      <!-- 搜索栏 -->
+      <app-card>
+        <div class="flex flex-wrap gap-3">
+          <div class="w-56">
+            <app-input v-model="searchName" placeholder="搜索服务名称" :clearable="true">
+              <template #prefix>
+                <span class="i-carbon-search"></span>
+              </template>
+            </app-input>
+          </div>
+          <div class="w-40">
+            <app-select v-model="searchType" :options="typeOptions" placeholder="服务类型" />
+          </div>
+          <app-button variant="default" size="sm" @click="loadData">
+            <span class="i-carbon-search"></span>
+            查询
+          </app-button>
+        </div>
+      </app-card>
+    </div>
 
     <!-- 数据表格 -->
     <app-card>
@@ -35,6 +37,9 @@
           <app-tag :type="getTypeTag(value as string)">
             {{ getTypeLabel(value as string) }}
           </app-tag>
+        </template>
+        <template #cell-serverId="{ value }">
+          <span>{{ serverNameMap[value as string] || value }}</span>
         </template>
         <template #cell-actions="{ row }">
           <div class="flex items-center gap-1">
@@ -188,6 +193,7 @@ const form = reactive(emptyForm())
 
 // 服务器选项
 const serverOptions = ref<{ label: string; value: string }[]>([])
+const serverNameMap = ref<Record<string, string>>({})
 
 function openCreate() {
   editingId.value = ''
@@ -284,12 +290,16 @@ async function loadServers() {
   try {
     const res = await Apis.asset.list_1({ params: {} }).send()
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    serverOptions.value = (res.data || []).map((s: any) => ({
-      label: `${s.hostName} (${s.hostIp})`,
-      value: s.id,
-    }))
+    const list = res.data || [] as any[]
+    const map: Record<string, string> = {}
+    serverOptions.value = list.map((s: any) => {
+      map[s.id] = s.hostName
+      return { label: `${s.hostName} (${s.hostIp})`, value: s.id }
+    })
+    serverNameMap.value = map
   } catch {
-    // mock
+    serverOptions.value = []
+    serverNameMap.value = {}
   }
 }
 

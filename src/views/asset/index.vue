@@ -1,36 +1,38 @@
 <template>
   <div class="page-container">
-    <div class="mb-6 flex items-center justify-between">
-      <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">服务器资产</h1>
-      <app-button variant="primary" size="sm" @click="openCreate">
-        <span class="i-carbon-add"></span>
-        新增服务器
-      </app-button>
-    </div>
-
-    <!-- 搜索栏 -->
-    <app-card class="mb-6">
-      <div class="flex flex-wrap gap-3">
-        <div class="w-48">
-          <app-input v-model="searchIp" placeholder="搜索 IP 地址" :clearable="true">
-            <template #prefix>
-              <span class="i-carbon-search"></span>
-            </template>
-          </app-input>
-        </div>
-        <div class="w-48">
-          <app-input v-model="searchName" placeholder="搜索主机别名" :clearable="true">
-            <template #prefix>
-              <span class="i-carbon-search"></span>
-            </template>
-          </app-input>
-        </div>
-        <app-button variant="default" size="sm" @click="loadData">
-          <span class="i-carbon-search"></span>
-          查询
+    <div class="sticky top-0 z-10 -mx-4 -mt-4 mb-6 bg-gray-50 px-4 pb-3 pt-4 dark:bg-gray-900">
+      <div class="mb-4 flex items-center justify-between">
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">服务器资产</h1>
+        <app-button variant="primary" size="sm" @click="openCreate">
+          <span class="i-carbon-add"></span>
+          新增服务器
         </app-button>
       </div>
-    </app-card>
+
+      <!-- 搜索栏 -->
+      <app-card>
+        <div class="flex flex-wrap gap-3">
+          <div class="w-48">
+            <app-input v-model="searchIp" placeholder="搜索 IP 地址" :clearable="true">
+              <template #prefix>
+                <span class="i-carbon-search"></span>
+              </template>
+            </app-input>
+          </div>
+          <div class="w-48">
+            <app-input v-model="searchName" placeholder="搜索主机别名" :clearable="true">
+              <template #prefix>
+                <span class="i-carbon-search"></span>
+              </template>
+            </app-input>
+          </div>
+          <app-button variant="default" size="sm" @click="loadData">
+            <span class="i-carbon-search"></span>
+            查询
+          </app-button>
+        </div>
+      </app-card>
+    </div>
 
     <!-- 数据表格 -->
     <app-card>

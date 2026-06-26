@@ -1,42 +1,202 @@
 [
   {
     "id": "srv-001",
-    "hostIp": "192.168.1.10",
-    "hostName": "prod-web-node-01",
-    "sshPort": 22,
-    "sshUsername": "opsadmin",
-    "nodeExporterPort": 9100
+    "hostIp": "192.168.1.11",
+    "hostName": "prod-web-01",
+    "sshPort": 23,
+    "sshUsername": "monitor",
+    "nodeExporterPort": 9101
   },
   {
     "id": "srv-002",
-    "hostIp": "192.168.1.11",
-    "hostName": "prod-app-node-02",
-    "sshPort": 22,
-    "sshUsername": "opsadmin",
-    "nodeExporterPort": 9100
+    "hostIp": "192.168.1.12",
+    "hostName": "prod-app-01",
+    "sshPort": 24,
+    "sshUsername": "dataops",
+    "nodeExporterPort": 9102
   },
   {
     "id": "srv-003",
-    "hostIp": "192.168.2.10",
-    "hostName": "monitor-node-01",
-    "sshPort": 8022,
-    "sshUsername": "monitor",
-    "nodeExporterPort": 9100
+    "hostIp": "192.168.1.13",
+    "hostName": "monitor-01",
+    "sshPort": 22,
+    "sshUsername": "opsadmin",
+    "nodeExporterPort": 9103
   },
   {
     "id": "srv-004",
+    "hostIp": "192.168.1.14",
+    "hostName": "mq-log-01",
+    "sshPort": 23,
+    "sshUsername": "monitor",
+    "nodeExporterPort": 9104
+  },
+  {
+    "id": "srv-005",
+    "hostIp": "192.168.1.10",
+    "hostName": "data-es-01",
+    "sshPort": 24,
+    "sshUsername": "dataops",
+    "nodeExporterPort": 9100
+  },
+  {
+    "id": "srv-006",
     "hostIp": "192.168.2.11",
-    "hostName": "mq-log-node-02",
+    "hostName": "cache-redis-02",
     "sshPort": 22,
     "sshUsername": "opsadmin",
     "nodeExporterPort": 9101
   },
   {
-    "id": "srv-005",
-    "hostIp": "10.0.1.50",
-    "hostName": "data-es-node-01",
-    "sshPort": 22,
+    "id": "srv-007",
+    "hostIp": "192.168.2.12",
+    "hostName": "proxy-nginx-02",
+    "sshPort": 23,
+    "sshUsername": "monitor",
+    "nodeExporterPort": 9102
+  },
+  {
+    "id": "srv-008",
+    "hostIp": "192.168.2.13",
+    "hostName": "worker-queue-02",
+    "sshPort": 24,
     "sshUsername": "dataops",
+    "nodeExporterPort": 9103
+  },
+  {
+    "id": "srv-009",
+    "hostIp": "192.168.2.14",
+    "hostName": "backup-store-02",
+    "sshPort": 22,
+    "sshUsername": "opsadmin",
+    "nodeExporterPort": 9104
+  },
+  {
+    "id": "srv-010",
+    "hostIp": "192.168.2.10",
+    "hostName": "db-mysql-02",
+    "sshPort": 23,
+    "sshUsername": "monitor",
+    "nodeExporterPort": 9100
+  },
+  {
+    "id": "srv-011",
+    "hostIp": "192.168.3.11",
+    "hostName": "db-postgres-03",
+    "sshPort": 24,
+    "sshUsername": "dataops",
+    "nodeExporterPort": 9101
+  },
+  {
+    "id": "srv-012",
+    "hostIp": "192.168.3.12",
+    "hostName": "stream-kafka-03",
+    "sshPort": 22,
+    "sshUsername": "opsadmin",
+    "nodeExporterPort": 9102
+  },
+  {
+    "id": "srv-013",
+    "hostIp": "192.168.3.13",
+    "hostName": "search-es-03",
+    "sshPort": 23,
+    "sshUsername": "monitor",
+    "nodeExporterPort": 9103
+  },
+  {
+    "id": "srv-014",
+    "hostIp": "192.168.3.14",
+    "hostName": "ci-jenkins-03",
+    "sshPort": 24,
+    "sshUsername": "dataops",
+    "nodeExporterPort": 9104
+  },
+  {
+    "id": "srv-015",
+    "hostIp": "192.168.3.10",
+    "hostName": "cd-argo-03",
+    "sshPort": 22,
+    "sshUsername": "opsadmin",
+    "nodeExporterPort": 9100
+  },
+  {
+    "id": "srv-016",
+    "hostIp": "192.168.4.11",
+    "hostName": "metrics-prom-04",
+    "sshPort": 23,
+    "sshUsername": "monitor",
+    "nodeExporterPort": 9101
+  },
+  {
+    "id": "srv-017",
+    "hostIp": "192.168.4.12",
+    "hostName": "dash-grafana-04",
+    "sshPort": 24,
+    "sshUsername": "dataops",
+    "nodeExporterPort": 9102
+  },
+  {
+    "id": "srv-018",
+    "hostIp": "192.168.4.13",
+    "hostName": "trace-jaeger-04",
+    "sshPort": 22,
+    "sshUsername": "opsadmin",
+    "nodeExporterPort": 9103
+  },
+  {
+    "id": "srv-019",
+    "hostIp": "192.168.4.14",
+    "hostName": "vault-secrets-04",
+    "sshPort": 23,
+    "sshUsername": "monitor",
+    "nodeExporterPort": 9104
+  },
+  {
+    "id": "srv-020",
+    "hostIp": "192.168.4.10",
+    "hostName": "auth-sso-04",
+    "sshPort": 24,
+    "sshUsername": "dataops",
+    "nodeExporterPort": 9100
+  },
+  {
+    "id": "srv-021",
+    "hostIp": "192.168.5.11",
+    "hostName": "api-gateway-05",
+    "sshPort": 22,
+    "sshUsername": "opsadmin",
+    "nodeExporterPort": 9101
+  },
+  {
+    "id": "srv-022",
+    "hostIp": "192.168.5.12",
+    "hostName": "file-minio-05",
+    "sshPort": 23,
+    "sshUsername": "monitor",
+    "nodeExporterPort": 9102
+  },
+  {
+    "id": "srv-023",
+    "hostIp": "192.168.5.13",
+    "hostName": "smtp-relay-05",
+    "sshPort": 24,
+    "sshUsername": "dataops",
+    "nodeExporterPort": 9103
+  },
+  {
+    "id": "srv-024",
+    "hostIp": "192.168.5.14",
+    "hostName": "dns-bind-05",
+    "sshPort": 22,
+    "sshUsername": "opsadmin",
+    "nodeExporterPort": 9104
+  },
+  {
+    "id": "srv-025",
+    "hostIp": "192.168.5.10",
+    "hostName": "ntp-chrony-05",
+    "sshPort": 23,
+    "sshUsername": "monitor",
     "nodeExporterPort": 9100
   }
 ]

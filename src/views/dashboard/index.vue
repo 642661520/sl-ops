@@ -1,16 +1,18 @@
 <template>
   <div class="page-container">
-    <div class="mb-6 flex items-center justify-between">
-      <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">仪表盘</h1>
-      <div class="flex items-center gap-3 text-xs text-gray-400">
-        <span class="i-carbon-time"></span>
-        <span>每 30s 刷新 · 上次：{{ lastUpdated }}</span>
-        <button
-          class="cursor-pointer rounded p-1 hover:bg-gray-100 dark:hover:bg-gray-700"
-          @click="manualRefresh"
-        >
-          <span class="i-carbon-renew text-sm" :class="{ 'animate-spin': refreshing }"></span>
-        </button>
+    <div class="sticky top-0 z-10 -mx-4 -mt-4 mb-6 bg-gray-50 px-4 pb-3 pt-4 dark:bg-gray-900">
+      <div class="flex items-center justify-between">
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">仪表盘</h1>
+        <div class="flex items-center gap-3 text-xs text-gray-400">
+          <span class="i-carbon-time"></span>
+          <span>每 30s 刷新 · 上次：{{ lastUpdated }}</span>
+          <button
+            class="cursor-pointer rounded p-1 hover:bg-gray-100 dark:hover:bg-gray-700"
+            @click="manualRefresh"
+          >
+            <span class="i-carbon-renew text-sm" :class="{ 'animate-spin': refreshing }"></span>
+          </button>
+        </div>
       </div>
     </div>
 
@@ -49,13 +51,13 @@
       <app-card>
         <div class="flex items-center gap-4">
           <div
-            class="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-100 dark:bg-emerald-900/30"
+            class="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/30"
           >
-            <span class="i-carbon-checkmark text-2xl text-emerald-600 dark:text-emerald-400"></span>
+            <span class="i-carbon-warning text-2xl text-amber-600 dark:text-amber-400"></span>
           </div>
           <div>
-            <p class="text-2xl font-bold text-gray-900 dark:text-gray-100">{{ stats.running }}</p>
-            <p class="text-sm text-gray-500 dark:text-gray-400">运行中</p>
+            <p class="text-2xl font-bold text-gray-900 dark:text-gray-100">{{ stats.highCpu }}</p>
+            <p class="text-sm text-gray-500 dark:text-gray-400">CPU 告警 (&gt;80%)</p>
           </div>
         </div>
       </app-card>
@@ -65,11 +67,11 @@
           <div
             class="flex h-12 w-12 items-center justify-center rounded-xl bg-red-100 dark:bg-red-900/30"
           >
-            <span class="i-carbon-close text-2xl text-red-600 dark:text-red-400"></span>
+            <span class="i-carbon-warning-alt text-2xl text-red-600 dark:text-red-400"></span>
           </div>
           <div>
-            <p class="text-2xl font-bold text-gray-900 dark:text-gray-100">{{ stats.stopped }}</p>
-            <p class="text-sm text-gray-500 dark:text-gray-400">已停止</p>
+            <p class="text-2xl font-bold text-gray-900 dark:text-gray-100">{{ stats.highMemory }}</p>
+            <p class="text-sm text-gray-500 dark:text-gray-400">内存告警 (&gt;80%)</p>
           </div>
         </div>
       </app-card>
@@ -92,7 +94,7 @@
                 :style="{ width: value + '%' }"
               ></div>
             </div>
-            <span class="text-xs tabular-nums">{{ value }}%</span>
+            <span class="text-xs tabular-nums">{{ Number(value).toFixed(2) }}%</span>
           </div>
         </template>
         <template #cell-memoryUsage="{ value }">
@@ -104,7 +106,7 @@
                 :style="{ width: value + '%' }"
               ></div>
             </div>
-            <span class="text-xs tabular-nums">{{ value }}%</span>
+            <span class="text-xs tabular-nums">{{ Number(value).toFixed(2) }}%</span>
           </div>
         </template>
         <template #cell-diskUsage="{ value }">
@@ -116,7 +118,7 @@
                 :style="{ width: value + '%' }"
               ></div>
             </div>
-            <span class="text-xs tabular-nums">{{ value }}%</span>
+            <span class="text-xs tabular-nums">{{ Number(value).toFixed(2) }}%</span>
           </div>
         </template>
       </app-table>
@@ -134,11 +136,31 @@
               placeholder="选择服务器"
             />
           </div>
+          <div class="flex items-center gap-2">
+            <span class="text-xs text-gray-400">范围</span>
+            <div class="w-28">
+              <app-select
+                v-model="selectedDuration"
+                :options="durationOptions"
+                placeholder="时间范围"
+              />
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-xs text-gray-400">步长</span>
+            <div class="w-24">
+              <app-select
+                v-model="selectedStep"
+                :options="stepOptions"
+                placeholder="步长"
+              />
+            </div>
+          </div>
           <div class="flex gap-1">
             <button
               v-for="tab in chartTabs"
               :key="tab.key"
-              class="rounded-md px-3 py-1 text-xs font-medium transition-colors"
+              class="cursor-pointer rounded-md px-3 py-1 text-xs font-medium transition-colors"
               :class="
                 activeTab === tab.key
                   ? 'bg-primary text-white'
@@ -151,7 +173,7 @@
           </div>
         </div>
       </template>
-      <div class="h-64">
+      <div class="h-80">
         <v-chart
           v-if="chartOption"
           :option="chartOption"
@@ -170,10 +192,10 @@ import type { TableColumn } from '@/components/ui/AppTable.vue'
 
 // 统计
 const stats = reactive({
-  servers: 5,
-  services: 10,
-  running: 8,
-  stopped: 2,
+  servers: 0,
+  services: 0,
+  highCpu: 0,
+  highMemory: 0,
 })
 
 const lastUpdated = ref('--')
@@ -185,7 +207,7 @@ function updateTime() {
 
 async function manualRefresh() {
   refreshing.value = true
-  await Promise.all([loadOverview(), loadChartData()])
+  await Promise.all([loadOverview(), loadServices(), loadChartData()])
   updateTime()
   refreshing.value = false
 }
@@ -211,6 +233,20 @@ function getUsageColor(value: number) {
 // 图表
 const activeTab = ref('cpu')
 const selectedServerId = ref('')
+const selectedDuration = ref('1800')
+const selectedStep = ref('60')
+const durationOptions = [
+  { label: '15 分钟', value: '900' },
+  { label: '30 分钟', value: '1800' },
+  { label: '1 小时', value: '3600' },
+  { label: '3 小时', value: '10800' },
+  { label: '6 小时', value: '21600' },
+]
+const stepOptions = [
+  { label: '30 秒', value: '30' },
+  { label: '1 分钟', value: '60' },
+  { label: '5 分钟', value: '300' },
+]
 const serverOptions = ref<{ label: string; value: string }[]>([{ label: '全部服务器', value: '' }])
 const chartTabs = [
   { key: 'cpu', label: 'CPU' },
@@ -231,11 +267,12 @@ const chartSeries = ref<ChartSeries[]>([])
 const chartOption = computed(() => {
   if (!chartSeries.value.length) return null
   return {
-    grid: { top: 10, right: 20, bottom: 20, left: 50 },
+    grid: { top: 10, right: 20, bottom: 50, left: 50 },
     legend: {
       data: chartSeries.value.map((s) => s.name),
-      bottom: 0,
-      textStyle: { fontSize: 11, color: '#9ca3af' },
+      bottom: 12,
+      itemGap: 12,
+      textStyle: { fontSize: 10, color: '#9ca3af' },
     },
     xAxis: {
       type: 'time' as const,
@@ -256,6 +293,10 @@ const chartOption = computed(() => {
       backgroundColor: '#fff',
       borderColor: '#e5e7eb',
       textStyle: { color: '#374151', fontSize: 12 },
+      valueFormatter: (value: unknown) => {
+        const unit = activeTab.value === 'network' ? ' bps' : '%'
+        return `${value}${unit}`
+      },
     },
     series: chartSeries.value.map((s, i) => ({
       name: s.name,
@@ -283,8 +324,8 @@ const chartOption = computed(() => {
 
 async function loadChartData() {
   const params = {
-    duration: 1800,
-    step: 60,
+    duration: Number(selectedDuration.value),
+    step: Number(selectedStep.value),
     serverId: selectedServerId.value || undefined,
   }
 
@@ -346,12 +387,30 @@ async function fetchMetric(
 }
 
 async function loadOverview() {
+  overviewLoading.value = true
   try {
     const res = await Apis.monitor.getOverview().send()
-    overviewData.value = res.data || []
-    stats.servers = overviewData.value.length
+    const data = (res.data || []) as { cpuUsage: string; memoryUsage: string }[]
+    overviewData.value = data
+    stats.servers = data.length
+    stats.highCpu = data.filter((s) => Number(s.cpuUsage) > 80).length
+    stats.highMemory = data.filter((s) => Number(s.memoryUsage) > 80).length
   } catch {
-    /* mock */
+    overviewData.value = []
+    stats.servers = 0
+    stats.highCpu = 0
+    stats.highMemory = 0
+  } finally {
+    overviewLoading.value = false
+  }
+}
+
+async function loadServices() {
+  try {
+    const res = await Apis.service.list({ params: {} }).send()
+    stats.services = (res.data || []).length
+  } catch {
+    stats.services = 0
   }
 }
 
@@ -365,7 +424,7 @@ async function loadServers() {
       ...list.map((s: any) => ({ label: s.hostName, value: s.id })),
     ]
   } catch {
-    /* mock */
+    serverOptions.value = [{ label: '全部服务器', value: '' }]
   }
 }
 
@@ -377,6 +436,10 @@ watch(selectedServerId, () => {
   loadChartData()
 })
 
+watch([selectedDuration, selectedStep], () => {
+  loadChartData()
+})
+
 onMounted(async () => {
   await loadServers()
   await manualRefresh()
@@ -385,7 +448,7 @@ onMounted(async () => {
 // 每 30 秒自动刷新监控数据（不立即触发，首次由 onMounted 加载）
 useIntervalFn(
   async () => {
-    await Promise.all([loadOverview(), loadChartData()])
+    await Promise.all([loadOverview(), loadServices(), loadChartData()])
     updateTime()
   },
   30000,

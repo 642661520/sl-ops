@@ -46,7 +46,7 @@
     <!-- 底部折叠按钮 -->
     <div class="border-t border-gray-100 px-2 py-3 dark:border-gray-700">
       <button
-        class="flex w-full items-center justify-center rounded-lg px-3 py-2 text-sm text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-700 dark:hover:text-gray-300"
+        class="flex w-full cursor-pointer items-center justify-center rounded-lg px-3 py-2 text-sm text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-700 dark:hover:text-gray-300"
         @click="emit('toggle')"
       >
         <span
