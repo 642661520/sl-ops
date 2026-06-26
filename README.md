@@ -1,4 +1,4 @@
-# sl-ops
+# 运维管理平台
 
 运维管理平台
 
@@ -31,7 +31,7 @@ pnpm build
 ## 目录结构
 
 ```
-sl-ops/
+运维管理平台/
 ├── src/
 │   ├── api/          # Alova 自动生成的 API 层
 │   ├── components/   # 公共组件

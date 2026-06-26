@@ -2,7 +2,7 @@
 
 ## 项目概述
 
-sl-ops 是一个**运维管理平台**，基于 Vue 3 + TypeScript + Vite 构建，用于运维相关管理功能。
+**运维管理平台**，基于 Vue 3 + TypeScript + Vite 构建，用于运维相关管理功能。
 
 ## 技术栈
 

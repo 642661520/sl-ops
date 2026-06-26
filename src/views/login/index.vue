@@ -39,13 +39,10 @@
 
       <div class="relative z-10">
         <div class="mb-4 flex items-center gap-3">
-          <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-primary">
-            <span class="text-lg font-bold text-white">S</span>
-          </div>
-          <span class="text-2xl font-bold tracking-wide text-white">sl-ops</span>
+          <img src="/logo.svg" alt="Logo" class="h-10 w-10" />
+          <span class="text-2xl font-bold tracking-wide text-white">运维管理平台</span>
         </div>
-        <h2 class="mt-6 text-3xl font-semibold leading-snug text-white">运维管理平台</h2>
-        <p class="mt-3 max-w-xs text-base leading-relaxed text-gray-400">
+        <p class="mt-6 max-w-xs text-base leading-relaxed text-gray-400">
           统一管理服务器资产、服务运行状态，实时监控系统资源，高效运维尽在掌控。
         </p>
 
@@ -73,10 +70,8 @@
         <!-- 移动端Logo -->
         <div class="mb-10 text-center lg:hidden">
           <div class="mb-2 flex items-center justify-center gap-2">
-            <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-primary">
-              <span class="text-lg font-bold text-white">S</span>
-            </div>
-            <span class="text-xl font-bold text-gray-900 dark:text-white">sl-ops</span>
+            <img src="/logo.svg" alt="Logo" class="h-10 w-10" />
+            <span class="text-xl font-bold text-gray-900 dark:text-white">运维管理平台</span>
           </div>
         </div>
 

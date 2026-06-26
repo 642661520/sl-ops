@@ -6,17 +6,13 @@
     <!-- Logo 区域 -->
     <div class="flex h-14 items-center border-b border-gray-100 px-3 dark:border-gray-700">
       <div class="flex items-center gap-2 overflow-hidden">
-        <div
-          class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-primary text-white"
-        >
-          <span class="text-sm font-bold">S</span>
-        </div>
+        <img src="/logo.svg" alt="Logo" class="h-8 w-8 flex-shrink-0" />
         <Transition name="fade">
           <span
             v-if="!collapsed"
             class="text-base font-bold whitespace-nowrap text-gray-900 dark:text-gray-100"
           >
-            sl-ops
+            运维管理平台
           </span>
         </Transition>
       </div>
