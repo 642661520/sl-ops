@@ -2,6 +2,7 @@ import { createAlova } from 'alova'
 import adapterFetch from 'alova/fetch'
 import vueHook from 'alova/vue'
 import { createAlovaMockAdapter } from '@alova/mock'
+import { useAuthStore } from '@/stores/auth'
 import mockGroups from './mock'
 
 const isMock = import.meta.env.VITE_MOCK === 'true'
@@ -12,6 +13,11 @@ const mockAdapter = createAlovaMockAdapter(mockGroups, {
   delay: 300,
   matchMode: 'methodurl',
 })
+
+function handleAuthExpired() {
+  useAuthStore().logout()
+  window.location.hash = '#/login'
+}
 
 export const alovaInstance = createAlova({
   baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -33,18 +39,24 @@ export const alovaInstance = createAlova({
     onSuccess: async (response) => {
       if (response.status >= 400) {
         if (response.status === 401) {
-          localStorage.removeItem('token')
-          localStorage.removeItem('tokenName')
-          localStorage.removeItem('userInfo')
-          window.location.hash = '#/login'
+          handleAuthExpired()
         }
         throw new Error(`Request failed: ${response.status}`)
       }
       const data = typeof response.json === 'function' ? await response.json() : response
       if (data.code !== undefined && data.code !== 200) {
+        if (data.code === 401) {
+          handleAuthExpired()
+        }
         throw new Error(data.msg || `请求失败 (code: ${data.code})`)
       }
       return data
+    },
+    onError: (error) => {
+      if ((error as { status?: number }).status === 401) {
+        handleAuthExpired()
+      }
+      throw error
     },
   },
 })
