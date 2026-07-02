@@ -35,10 +35,6 @@ export default defineMock(
         serviceName: String(data.serviceName || ''),
         serviceType: String(data.serviceType || 'docker'),
         description: String(data.description || ''),
-        startCommand: String(data.startCommand ?? ''),
-        stopCommand: String(data.stopCommand ?? ''),
-        restartCommand: String(data.restartCommand ?? ''),
-        statusCommand: String(data.statusCommand ?? ''),
       }
       services.push(newSvc)
       return { code: 200, msg: '创建成功', data: newSvc.id }
@@ -60,6 +56,37 @@ export default defineMock(
       }
       services.splice(idx, 1)
       return { code: 200, msg: '删除成功', data: true }
+    },
+
+    '[GET]/api/service/discover/{serverId}': ({
+      params,
+      query,
+    }: {
+      params: { serverId: string }
+      query: { keyword?: string }
+    }) => {
+      const dockerMap: Record<string, string[]> = {
+        'srv-001': ['nginx-prod', 'mysql-master', 'redis-cache'],
+        'srv-002': ['jenkins-master', 'sonarqube', 'nexus-oss'],
+        'srv-003': ['kafka-broker-1', 'kafka-broker-2', 'zookeeper'],
+        'srv-004': ['postgres-main', 'pgbouncer', 'redis-sentinel'],
+      }
+      const systemctlMap: Record<string, string[]> = {
+        'srv-001': ['sshd', 'nginx', 'fail2ban'],
+        'srv-002': ['docker', 'jenkins-agent', 'cron'],
+        'srv-003': ['sshd', 'firewalld', 'rsyslog'],
+        'srv-004': ['sshd', 'postgresql', 'prometheus-node-exporter'],
+      }
+      const filter = (arr: string[]) =>
+        query.keyword ? arr.filter((n) => n.includes(query.keyword!)) : arr
+      return {
+        code: 200,
+        msg: 'success',
+        data: {
+          docker: filter(dockerMap[params.serverId] || ['app-container', 'sidecar-container']),
+          systemctl: filter(systemctlMap[params.serverId] || ['sshd', 'cron', 'systemd-journald']),
+        },
+      }
     },
   },
   true,

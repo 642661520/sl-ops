@@ -2,5 +2,6 @@ import serviceMock from './service.mock'
 import assetMock from './asset.mock'
 import controlMock from './control.mock'
 import monitorMock from './monitor.mock'
+import loginMock from './login.mock'
 
-export default [serviceMock, assetMock, controlMock, monitorMock]
+export default [serviceMock, assetMock, controlMock, monitorMock, loginMock]

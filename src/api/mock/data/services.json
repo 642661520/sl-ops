@@ -52,12 +52,8 @@
     "id": "svc-008",
     "serverId": "srv-003",
     "serviceName": "log-collector-008",
-    "serviceType": "custom",
-    "description": "log collector 服务实例 #8",
-    "startCommand": "/opt/log-collector/bin/start.sh",
-    "stopCommand": "/opt/log-collector/bin/stop.sh",
-    "restartCommand": "/opt/log-collector/bin/restart.sh",
-    "statusCommand": "/opt/log-collector/bin/status.sh"
+    "serviceType": "systemctl",
+    "description": "log collector 服务实例 #8"
   },
   {
     "id": "svc-009",
@@ -70,12 +66,8 @@
     "id": "svc-010",
     "serverId": "srv-004",
     "serviceName": "api-gateway-010",
-    "serviceType": "custom",
-    "description": "api gateway 服务实例 #10",
-    "startCommand": "/opt/api-gateway/bin/start.sh",
-    "stopCommand": "/opt/api-gateway/bin/stop.sh",
-    "restartCommand": "/opt/api-gateway/bin/restart.sh",
-    "statusCommand": "/opt/api-gateway/bin/status.sh"
+    "serviceType": "systemctl",
+    "description": "api gateway 服务实例 #10"
   },
   {
     "id": "svc-011",
@@ -130,23 +122,15 @@
     "id": "svc-018",
     "serverId": "srv-006",
     "serviceName": "fluentd-018",
-    "serviceType": "custom",
-    "description": "fluentd 服务实例 #18",
-    "startCommand": "/opt/fluentd/bin/start.sh",
-    "stopCommand": "/opt/fluentd/bin/stop.sh",
-    "restartCommand": "/opt/fluentd/bin/restart.sh",
-    "statusCommand": "/opt/fluentd/bin/status.sh"
+    "serviceType": "systemctl",
+    "description": "fluentd 服务实例 #18"
   },
   {
     "id": "svc-019",
     "serverId": "srv-007",
     "serviceName": "filebeat-019",
-    "serviceType": "custom",
-    "description": "filebeat 服务实例 #19",
-    "startCommand": "/opt/filebeat/bin/start.sh",
-    "stopCommand": "/opt/filebeat/bin/stop.sh",
-    "restartCommand": "/opt/filebeat/bin/restart.sh",
-    "statusCommand": "/opt/filebeat/bin/status.sh"
+    "serviceType": "systemctl",
+    "description": "filebeat 服务实例 #19"
   },
   {
     "id": "svc-020",
@@ -250,56 +234,36 @@
     "id": "svc-034",
     "serverId": "srv-012",
     "serviceName": "gitlab-runner-034",
-    "serviceType": "custom",
-    "description": "gitlab runner 服务实例 #34",
-    "startCommand": "/opt/gitlab-runner/bin/start.sh",
-    "stopCommand": "/opt/gitlab-runner/bin/stop.sh",
-    "restartCommand": "/opt/gitlab-runner/bin/restart.sh",
-    "statusCommand": "/opt/gitlab-runner/bin/status.sh"
+    "serviceType": "systemctl",
+    "description": "gitlab runner 服务实例 #34"
   },
   {
     "id": "svc-035",
     "serverId": "srv-012",
     "serviceName": "drone-runner-035",
-    "serviceType": "custom",
-    "description": "drone runner 服务实例 #35",
-    "startCommand": "/opt/drone-runner/bin/start.sh",
-    "stopCommand": "/opt/drone-runner/bin/stop.sh",
-    "restartCommand": "/opt/drone-runner/bin/restart.sh",
-    "statusCommand": "/opt/drone-runner/bin/status.sh"
+    "serviceType": "systemctl",
+    "description": "drone runner 服务实例 #35"
   },
   {
     "id": "svc-036",
     "serverId": "srv-012",
     "serviceName": "ansible-036",
-    "serviceType": "custom",
-    "description": "ansible 服务实例 #36",
-    "startCommand": "/opt/ansible/bin/start.sh",
-    "stopCommand": "/opt/ansible/bin/stop.sh",
-    "restartCommand": "/opt/ansible/bin/restart.sh",
-    "statusCommand": "/opt/ansible/bin/status.sh"
+    "serviceType": "systemctl",
+    "description": "ansible 服务实例 #36"
   },
   {
     "id": "svc-037",
     "serverId": "srv-013",
     "serviceName": "terraform-037",
-    "serviceType": "custom",
-    "description": "terraform 服务实例 #37",
-    "startCommand": "/opt/terraform/bin/start.sh",
-    "stopCommand": "/opt/terraform/bin/stop.sh",
-    "restartCommand": "/opt/terraform/bin/restart.sh",
-    "statusCommand": "/opt/terraform/bin/status.sh"
+    "serviceType": "systemctl",
+    "description": "terraform 服务实例 #37"
   },
   {
     "id": "svc-038",
     "serverId": "srv-013",
     "serviceName": "packer-038",
-    "serviceType": "custom",
-    "description": "packer 服务实例 #38",
-    "startCommand": "/opt/packer/bin/start.sh",
-    "stopCommand": "/opt/packer/bin/stop.sh",
-    "restartCommand": "/opt/packer/bin/restart.sh",
-    "statusCommand": "/opt/packer/bin/status.sh"
+    "serviceType": "systemctl",
+    "description": "packer 服务实例 #38"
   },
   {
     "id": "svc-039",
@@ -347,23 +311,15 @@
     "id": "svc-045",
     "serverId": "srv-015",
     "serviceName": "rsyslog-045",
-    "serviceType": "custom",
-    "description": "rsyslog 服务实例 #45",
-    "startCommand": "/opt/rsyslog/bin/start.sh",
-    "stopCommand": "/opt/rsyslog/bin/stop.sh",
-    "restartCommand": "/opt/rsyslog/bin/restart.sh",
-    "statusCommand": "/opt/rsyslog/bin/status.sh"
+    "serviceType": "systemctl",
+    "description": "rsyslog 服务实例 #45"
   },
   {
     "id": "svc-046",
     "serverId": "srv-016",
     "serviceName": "splunk-forwarder-046",
-    "serviceType": "custom",
-    "description": "splunk forwarder 服务实例 #46",
-    "startCommand": "/opt/splunk-forwarder/bin/start.sh",
-    "stopCommand": "/opt/splunk-forwarder/bin/stop.sh",
-    "restartCommand": "/opt/splunk-forwarder/bin/restart.sh",
-    "statusCommand": "/opt/splunk-forwarder/bin/status.sh"
+    "serviceType": "systemctl",
+    "description": "splunk forwarder 服务实例 #46"
   },
   {
     "id": "svc-047",
@@ -446,33 +402,21 @@
     "id": "svc-058",
     "serverId": "srv-020",
     "serviceName": "openvpn-058",
-    "serviceType": "custom",
-    "description": "openvpn 服务实例 #58",
-    "startCommand": "/opt/openvpn/bin/start.sh",
-    "stopCommand": "/opt/openvpn/bin/stop.sh",
-    "restartCommand": "/opt/openvpn/bin/restart.sh",
-    "statusCommand": "/opt/openvpn/bin/status.sh"
+    "serviceType": "systemctl",
+    "description": "openvpn 服务实例 #58"
   },
   {
     "id": "svc-059",
     "serverId": "srv-020",
     "serviceName": "wireguard-059",
-    "serviceType": "custom",
-    "description": "wireguard 服务实例 #59",
-    "startCommand": "/opt/wireguard/bin/start.sh",
-    "stopCommand": "/opt/wireguard/bin/stop.sh",
-    "restartCommand": "/opt/wireguard/bin/restart.sh",
-    "statusCommand": "/opt/wireguard/bin/status.sh"
+    "serviceType": "systemctl",
+    "description": "wireguard 服务实例 #59"
   },
   {
     "id": "svc-060",
     "serverId": "srv-020",
     "serviceName": "frp-060",
-    "serviceType": "custom",
-    "description": "frp 服务实例 #60",
-    "startCommand": "/opt/frp/bin/start.sh",
-    "stopCommand": "/opt/frp/bin/stop.sh",
-    "restartCommand": "/opt/frp/bin/restart.sh",
-    "statusCommand": "/opt/frp/bin/status.sh"
+    "serviceType": "systemctl",
+    "description": "frp 服务实例 #60"
   }
 ]

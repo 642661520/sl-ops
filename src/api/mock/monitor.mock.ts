@@ -23,7 +23,7 @@ for (const s of serversData as { id: string }[]) {
   }
 }
 
-// 生成模拟时序数据点
+// 生成模拟时序数据点（百分比类指标：0-100）
 function generateMetricPoints(count: number, baseValue: number, variance: number) {
   const now = Date.now()
   const points = []
@@ -31,6 +31,19 @@ function generateMetricPoints(count: number, baseValue: number, variance: number
     points.push({
       timestamp: now - (count - 1 - i) * 60000,
       value: Math.max(0, Math.min(100, baseValue + (Math.random() - 0.5) * variance)),
+    })
+  }
+  return points
+}
+
+// 生成网络流量时序数据点（bps）
+function generateNetworkPoints(count: number, baseMbps: number, variance: number) {
+  const now = Date.now()
+  const points = []
+  for (let i = 0; i < count; i++) {
+    points.push({
+      timestamp: now - (count - 1 - i) * 60000,
+      value: Math.round(Math.max(0, baseMbps + (Math.random() - 0.5) * variance) * 1e6),
     })
   }
   return points
@@ -73,8 +86,8 @@ export default defineMock(
         code: 200,
         msg: 'success',
         data: {
-          rx: generateMetricPoints(count, p.rx, 25),
-          tx: generateMetricPoints(count, p.tx, 15),
+          rx: generateNetworkPoints(count, p.rx, 25),
+          tx: generateNetworkPoints(count, p.tx, 15),
         },
       }
     },

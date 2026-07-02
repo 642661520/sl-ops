@@ -16,21 +16,23 @@
  * **Do not edit the file manually.**
  */
 export default {
-  'service.list': ['GET', '/api/service/list'],
   'service.update': ['PUT', '/api/service'],
   'service.create': ['POST', '/api/service'],
   'service.get': ['GET', '/api/service/{id}'],
   'service.delete_': ['DELETE', '/api/service/{id}'],
-  'asset.list_1': ['GET', '/api/server/list'],
+  'service.list': ['GET', '/api/service/list'],
+  'service.discover': ['GET', '/api/service/discover/{serverId}'],
   'asset.update_1': ['PUT', '/api/server'],
   'asset.create_1': ['POST', '/api/server'],
   'asset.get_1': ['GET', '/api/server/{id}'],
   'asset.delete_1': ['DELETE', '/api/server/{id}'],
+  'asset.list_1': ['GET', '/api/server/list'],
   'serviceControl.executeControl': ['POST', '/api/control/execute'],
   'serviceControl.getStatus': ['GET', '/api/control/status'],
   'monitor.getOverview': ['GET', '/api/monitor/overview'],
+  'monitor.getNetworkUsage': ['GET', '/api/monitor/network'],
   'monitor.getMemoryUsage': ['GET', '/api/monitor/memory'],
   'monitor.getDiskUsage': ['GET', '/api/monitor/disk'],
   'monitor.getCpuUsage': ['GET', '/api/monitor/cpu'],
-  'monitor.getNetworkUsage': ['GET', '/api/monitor/network']
+  'general.login': ['POST', '/api/login']
 };

@@ -6,6 +6,7 @@ interface UserInfo {
 
 export const useAuthStore = defineStore('auth', () => {
   const token = ref<string | null>(localStorage.getItem('token'))
+  const tokenName = ref<string | null>(localStorage.getItem('tokenName'))
   const userInfo = ref<UserInfo | null>(
     localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')!) : null,
   )
@@ -13,27 +14,29 @@ export const useAuthStore = defineStore('auth', () => {
   const isLoggedIn = computed(() => !!token.value)
 
   async function login(username: string, password: string) {
-    // 模拟登录：admin/admin123
-    if (username === 'admin' && password === 'admin123') {
-      const fakeToken = `token_${Date.now()}_${Math.random().toString(36).slice(2)}`
-      token.value = fakeToken
-      userInfo.value = { username }
-      localStorage.setItem('token', fakeToken)
-      localStorage.setItem('userInfo', JSON.stringify({ username }))
-      return
-    }
-    throw new Error('用户名或密码错误')
+    const res = await Apis.general.login({ data: { username, password } }).send()
+    const { token: t, tokenName: tn } = res.data || {}
+    if (!t) throw new Error('登录失败：未获取到 token')
+    token.value = t
+    tokenName.value = tn || 'Authorization'
+    userInfo.value = { username }
+    localStorage.setItem('token', t)
+    localStorage.setItem('tokenName', tn || 'Authorization')
+    localStorage.setItem('userInfo', JSON.stringify({ username }))
   }
 
   function logout() {
     token.value = null
+    tokenName.value = null
     userInfo.value = null
     localStorage.removeItem('token')
+    localStorage.removeItem('tokenName')
     localStorage.removeItem('userInfo')
   }
 
   return {
     token,
+    tokenName,
     userInfo,
     isLoggedIn,
     login,

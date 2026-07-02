@@ -100,27 +100,11 @@ export interface ServiceInfoUpdateBo {
   /**
    * 服务类型
    */
-  serviceType?: 'docker' | 'systemctl' | 'custom';
+  serviceType?: 'docker' | 'systemctl';
   /**
    * 服务描述
    */
   description?: string;
-  /**
-   * 自定义启动命令(仅custom类型使用)
-   */
-  startCommand?: string;
-  /**
-   * 自定义停止命令(仅custom类型使用)
-   */
-  stopCommand?: string;
-  /**
-   * 自定义重启命令(仅custom类型使用)
-   */
-  restartCommand?: string;
-  /**
-   * 自定义查看状态命令(仅custom类型使用)
-   */
-  statusCommand?: string;
 }
 export interface ServiceInfoAddBo {
   /**
@@ -134,27 +118,11 @@ export interface ServiceInfoAddBo {
   /**
    * 服务类型
    */
-  serviceType: 'docker' | 'systemctl' | 'custom';
+  serviceType: 'docker' | 'systemctl';
   /**
    * 服务描述
    */
   description?: string;
-  /**
-   * 自定义启动命令(仅custom类型使用)
-   */
-  startCommand?: string;
-  /**
-   * 自定义停止命令(仅custom类型使用)
-   */
-  stopCommand?: string;
-  /**
-   * 自定义重启命令(仅custom类型使用)
-   */
-  restartCommand?: string;
-  /**
-   * 自定义查看状态命令(仅custom类型使用)
-   */
-  statusCommand?: string;
 }
 export interface ServerAssetUpdateBo {
   /**
@@ -218,6 +186,16 @@ export interface ControlExecuteBo {
    */
   action: 'start' | 'stop' | 'restart';
 }
+export interface LoginBo {
+  /**
+   * 用户名
+   */
+  username: string;
+  /**
+   * 密码
+   */
+  password: string;
+}
 export interface ServerOverview {
   /**
    * 服务器主键ID
@@ -254,58 +232,6 @@ export interface RListServerOverview {
    */
   data?: ServerOverview[];
 }
-export interface ServiceInfoVo {
-  /**
-   * 主键ID
-   */
-  id: string;
-  /**
-   * 关联的服务器主键ID
-   */
-  serverId: string;
-  /**
-   * 服务名称
-   */
-  serviceName: string;
-  /**
-   * 服务类型
-   */
-  serviceType: 'docker' | 'systemctl' | 'custom';
-  /**
-   * 服务描述
-   */
-  description: string;
-  /**
-   * 自定义启动命令
-   */
-  startCommand?: string;
-  /**
-   * 自定义停止命令
-   */
-  stopCommand?: string;
-  /**
-   * 自定义重启命令
-   */
-  restartCommand?: string;
-  /**
-   * 自定义查看状态命令
-   */
-  statusCommand?: string;
-}
-export interface RListServiceInfoVo {
-  /**
-   * 消息状态码
-   */
-  code?: number;
-  /**
-   * 消息内容
-   */
-  msg?: string;
-  /**
-   * 数据对象
-   */
-  data?: ServiceInfoVo[];
-}
 export interface RBoolean {
   /**
    * 消息状态码
@@ -334,6 +260,28 @@ export interface RLong {
    */
   data?: number;
 }
+export interface ServiceInfoVo {
+  /**
+   * 主键ID
+   */
+  id: string;
+  /**
+   * 关联的服务器主键ID
+   */
+  serverId: string;
+  /**
+   * 服务名称
+   */
+  serviceName: string;
+  /**
+   * 服务类型
+   */
+  serviceType: 'docker' | 'systemctl';
+  /**
+   * 服务描述
+   */
+  description: string;
+}
 export interface RServiceInfoVo {
   /**
    * 消息状态码
@@ -347,6 +295,20 @@ export interface RServiceInfoVo {
    * 数据对象
    */
   data?: ServiceInfoVo;
+}
+export interface RListServiceInfoVo {
+  /**
+   * 消息状态码
+   */
+  code?: number;
+  /**
+   * 消息内容
+   */
+  msg?: string;
+  /**
+   * 数据对象
+   */
+  data?: ServiceInfoVo[];
 }
 export interface ServerAssetVo {
   /**
@@ -374,20 +336,6 @@ export interface ServerAssetVo {
    */
   nodeExporterPort: number;
 }
-export interface RListServerAssetVo {
-  /**
-   * 消息状态码
-   */
-  code?: number;
-  /**
-   * 消息内容
-   */
-  msg?: string;
-  /**
-   * 数据对象
-   */
-  data?: ServerAssetVo[];
-}
 export interface RServerAssetVo {
   /**
    * 消息状态码
@@ -401,6 +349,20 @@ export interface RServerAssetVo {
    * 数据对象
    */
   data?: ServerAssetVo;
+}
+export interface RListServerAssetVo {
+  /**
+   * 消息状态码
+   */
+  code?: number;
+  /**
+   * 消息内容
+   */
+  msg?: string;
+  /**
+   * 数据对象
+   */
+  data?: ServerAssetVo[];
 }
 export interface RString {
   /**
@@ -440,20 +402,6 @@ export interface MetricPoint {
    */
   value?: number;
 }
-export interface RListMetricPoint {
-  /**
-   * 消息状态码
-   */
-  code?: number;
-  /**
-   * 消息内容
-   */
-  msg?: string;
-  /**
-   * 数据对象
-   */
-  data?: MetricPoint[];
-}
 export interface NetworkUsageVo {
   /**
    * 接收速率（bps）
@@ -478,86 +426,75 @@ export interface RNetworkUsageVo {
    */
   data?: NetworkUsageVo;
 }
+export interface RListMetricPoint {
+  /**
+   * 消息状态码
+   */
+  code?: number;
+  /**
+   * 消息内容
+   */
+  msg?: string;
+  /**
+   * 数据对象
+   */
+  data?: MetricPoint[];
+}
+export interface LoginResultVo {
+  /**
+   * token 值
+   */
+  token?: string;
+  /**
+   * token 名称，后续请求需放在此名称的请求头中
+   */
+  tokenName?: string;
+  /**
+   * token 剩余有效时间（秒）
+   */
+  timeout?: number;
+}
+export interface RLoginResultVo {
+  /**
+   * 消息状态码
+   */
+  code?: number;
+  /**
+   * 消息内容
+   */
+  msg?: string;
+  /**
+   * 数据对象
+   */
+  data?: LoginResultVo;
+}
+export interface RemoteServicesVo {
+  /**
+   * Docker 容器名称列表
+   */
+  docker?: string[];
+  /**
+   * systemctl 服务名称列表
+   */
+  systemctl?: string[];
+}
+export interface RRemoteServicesVo {
+  /**
+   * 消息状态码
+   */
+  code?: number;
+  /**
+   * 消息内容
+   */
+  msg?: string;
+  /**
+   * 数据对象
+   */
+  data?: RemoteServicesVo;
+}
 declare global {
   interface Apis {
     service: {
-      /**
-       * ---
-       *
-       * [GET] 获取服务列表（支持多条件查询）
-       *
-       * **path:** /api/service/list
-       *
-       * ---
-       *
-       * **Query Parameters**
-       * ```ts
-       * type QueryParameters = {
-       *   // 关联的服务器主键ID
-       *   serverId?: string
-       *   // 服务名称（模糊匹配）
-       *   serviceName?: string
-       *   // 服务类型
-       *   serviceType?: 'docker' | 'systemctl' | 'custom'
-       * }
-       * ```
-       *
-       * ---
-       *
-       * **Response**
-       * ```ts
-       * type Response = {
-       *   // 消息状态码
-       *   code?: number
-       *   // 消息内容
-       *   msg?: string
-       *   // 数据对象
-       *   // [items] start
-       *   // 服务信息列表展示
-       *   // [items] end
-       *   data?: Array<{
-       *     // 主键ID
-       *     id: string
-       *     // 关联的服务器主键ID
-       *     serverId: string
-       *     // 服务名称
-       *     serviceName: string
-       *     // 服务类型
-       *     serviceType: 'docker' | 'systemctl' | 'custom'
-       *     // 服务描述
-       *     description: string
-       *     // 自定义启动命令
-       *     startCommand?: string
-       *     // 自定义停止命令
-       *     stopCommand?: string
-       *     // 自定义重启命令
-       *     restartCommand?: string
-       *     // 自定义查看状态命令
-       *     statusCommand?: string
-       *   }>
-       * }
-       * ```
-       */
-      list<
-        Config extends Alova2MethodConfig<RListServiceInfoVo> & {
-          params: {
-            /**
-             * 关联的服务器主键ID
-             */
-            serverId?: string;
-            /**
-             * 服务名称（模糊匹配）
-             */
-            serviceName?: string;
-            /**
-             * 服务类型
-             */
-            serviceType?: 'docker' | 'systemctl' | 'custom';
-          };
-        }
-      >(
-        config: Config
-      ): Alova2Method<RListServiceInfoVo, 'service.list', Config>;
       /**
        * ---
        *
@@ -575,17 +512,9 @@ declare global {
        *   // 服务名称
        *   serviceName?: string
        *   // 服务类型
-       *   serviceType?: 'docker' | 'systemctl' | 'custom'
+       *   serviceType?: 'docker' | 'systemctl'
        *   // 服务描述
        *   description?: string
-       *   // 自定义启动命令(仅custom类型使用)
-       *   startCommand?: string
-       *   // 自定义停止命令(仅custom类型使用)
-       *   stopCommand?: string
-       *   // 自定义重启命令(仅custom类型使用)
-       *   restartCommand?: string
-       *   // 自定义查看状态命令(仅custom类型使用)
-       *   statusCommand?: string
        * }
        * ```
        *
@@ -627,17 +556,9 @@ declare global {
        *   // 服务名称
        *   serviceName: string
        *   // 服务类型
-       *   serviceType: 'docker' | 'systemctl' | 'custom'
+       *   serviceType: 'docker' | 'systemctl'
        *   // 服务描述
        *   description?: string
-       *   // 自定义启动命令(仅custom类型使用)
-       *   startCommand?: string
-       *   // 自定义停止命令(仅custom类型使用)
-       *   stopCommand?: string
-       *   // 自定义重启命令(仅custom类型使用)
-       *   restartCommand?: string
-       *   // 自定义查看状态命令(仅custom类型使用)
-       *   statusCommand?: string
        * }
        * ```
        *
@@ -696,17 +617,9 @@ declare global {
        *     // 服务名称
        *     serviceName: string
        *     // 服务类型
-       *     serviceType: 'docker' | 'systemctl' | 'custom'
+       *     serviceType: 'docker' | 'systemctl'
        *     // 服务描述
        *     description: string
-       *     // 自定义启动命令
-       *     startCommand?: string
-       *     // 自定义停止命令
-       *     stopCommand?: string
-       *     // 自定义重启命令
-       *     restartCommand?: string
-       *     // 自定义查看状态命令
-       *     statusCommand?: string
        *   }
        * }
        * ```
@@ -759,24 +672,24 @@ declare global {
       >(
         config: Config
       ): Alova2Method<RBoolean, 'service.delete_', Config>;
-    };
-    asset: {
       /**
        * ---
        *
-       * [GET] 获取服务器列表（支持多条件查询）
+       * [GET] 获取服务列表（支持多条件查询）
        *
-       * **path:** /api/server/list
+       * **path:** /api/service/list
        *
        * ---
        *
        * **Query Parameters**
        * ```ts
        * type QueryParameters = {
-       *   // 服务器IP地址（模糊匹配）
-       *   hostIp?: string
-       *   // 主机别名（模糊匹配）
-       *   hostName?: string
+       *   // 关联的服务器主键ID
+       *   serverId?: string
+       *   // 服务名称（模糊匹配）
+       *   serviceName?: string
+       *   // 服务类型
+       *   serviceType?: 'docker' | 'systemctl'
        * }
        * ```
        *
@@ -791,41 +704,113 @@ declare global {
        *   msg?: string
        *   // 数据对象
        *   // [items] start
-       *   // 服务器资产列表展示
+       *   // 服务信息列表展示
        *   // [items] end
        *   data?: Array<{
        *     // 主键ID
        *     id: string
-       *     // 服务器IP地址
-       *     hostIp: string
-       *     // 主机别名
-       *     hostName: string
-       *     // SSH端口
-       *     sshPort: number
-       *     // SSH登录用户名
-       *     sshUsername: string
-       *     // Node Exporter 指标采集端口
-       *     nodeExporterPort: number
+       *     // 关联的服务器主键ID
+       *     serverId: string
+       *     // 服务名称
+       *     serviceName: string
+       *     // 服务类型
+       *     serviceType: 'docker' | 'systemctl'
+       *     // 服务描述
+       *     description: string
        *   }>
        * }
        * ```
        */
-      list_1<
-        Config extends Alova2MethodConfig<RListServerAssetVo> & {
+      list<
+        Config extends Alova2MethodConfig<RListServiceInfoVo> & {
           params: {
             /**
-             * 服务器IP地址（模糊匹配）
+             * 关联的服务器主键ID
              */
-            hostIp?: string;
+            serverId?: string;
             /**
-             * 主机别名（模糊匹配）
+             * 服务名称（模糊匹配）
              */
-            hostName?: string;
+            serviceName?: string;
+            /**
+             * 服务类型
+             */
+            serviceType?: 'docker' | 'systemctl';
           };
         }
       >(
         config: Config
-      ): Alova2Method<RListServerAssetVo, 'asset.list_1', Config>;
+      ): Alova2Method<RListServiceInfoVo, 'service.list', Config>;
+      /**
+       * ---
+       *
+       * [GET] 列出服务器上所有的远程服务（docker 容器 + systemctl 服务），按类型分组。
+       *
+       * **path:** /api/service/discover/{serverId}
+       *
+       * ---
+       *
+       * **Path Parameters**
+       * ```ts
+       * type PathParameters = {
+       *   // 服务器ID
+       *   serverId: string
+       * }
+       * ```
+       *
+       * ---
+       *
+       * **Query Parameters**
+       * ```ts
+       * type QueryParameters = {
+       *   // 模糊搜索关键字
+       *   keyword?: string
+       * }
+       * ```
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = {
+       *   // 消息状态码
+       *   code?: number
+       *   // 消息内容
+       *   msg?: string
+       *   // 数据对象
+       *   data?: {
+       *     // Docker 容器名称列表
+       *     // [items] start
+       *     // [items] end
+       *     docker?: string[]
+       *     // systemctl 服务名称列表
+       *     // [items] start
+       *     // [items] end
+       *     systemctl?: string[]
+       *   }
+       * }
+       * ```
+       */
+      discover<
+        Config extends Alova2MethodConfig<RRemoteServicesVo> & {
+          pathParams: {
+            /**
+             * 服务器ID
+             */
+            serverId: string;
+          };
+          params: {
+            /**
+             * 模糊搜索关键字
+             */
+            keyword?: string;
+          };
+        }
+      >(
+        config: Config
+      ): Alova2Method<RRemoteServicesVo, 'service.discover', Config>;
+    };
+    asset: {
       /**
        * ---
        *
@@ -1021,6 +1006,71 @@ declare global {
       >(
         config: Config
       ): Alova2Method<RBoolean, 'asset.delete_1', Config>;
+      /**
+       * ---
+       *
+       * [GET] 获取服务器列表（支持多条件查询）
+       *
+       * **path:** /api/server/list
+       *
+       * ---
+       *
+       * **Query Parameters**
+       * ```ts
+       * type QueryParameters = {
+       *   // 服务器IP地址（模糊匹配）
+       *   hostIp?: string
+       *   // 主机别名（模糊匹配）
+       *   hostName?: string
+       * }
+       * ```
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = {
+       *   // 消息状态码
+       *   code?: number
+       *   // 消息内容
+       *   msg?: string
+       *   // 数据对象
+       *   // [items] start
+       *   // 服务器资产列表展示
+       *   // [items] end
+       *   data?: Array<{
+       *     // 主键ID
+       *     id: string
+       *     // 服务器IP地址
+       *     hostIp: string
+       *     // 主机别名
+       *     hostName: string
+       *     // SSH端口
+       *     sshPort: number
+       *     // SSH登录用户名
+       *     sshUsername: string
+       *     // Node Exporter 指标采集端口
+       *     nodeExporterPort: number
+       *   }>
+       * }
+       * ```
+       */
+      list_1<
+        Config extends Alova2MethodConfig<RListServerAssetVo> & {
+          params: {
+            /**
+             * 服务器IP地址（模糊匹配）
+             */
+            hostIp?: string;
+            /**
+             * 主机别名（模糊匹配）
+             */
+            hostName?: string;
+          };
+        }
+      >(
+        config: Config
+      ): Alova2Method<RListServerAssetVo, 'asset.list_1', Config>;
     };
     serviceControl: {
       /**
@@ -1146,6 +1196,82 @@ declare global {
       getOverview<Config extends Alova2MethodConfig<RListServerOverview>>(
         config?: Config
       ): Alova2Method<RListServerOverview, 'monitor.getOverview', Config>;
+      /**
+       * ---
+       *
+       * [GET] 获取网络流量趋势
+       *
+       * **path:** /api/monitor/network
+       *
+       * ---
+       *
+       * **Query Parameters**
+       * ```ts
+       * type QueryParameters = {
+       *   // 服务器主键ID
+       *   serverId?: string
+       *   // 查询时间范围（秒），默认 3600
+       *   duration?: number
+       *   // 采样步长（秒），默认 60
+       *   step?: number
+       * }
+       * ```
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = {
+       *   // 消息状态码
+       *   code?: number
+       *   // 消息内容
+       *   msg?: string
+       *   // 数据对象
+       *   data?: {
+       *     // 接收速率（bps）
+       *     // [items] start
+       *     // 监控指标数据点
+       *     // [items] end
+       *     rx: Array<{
+       *       // 13位毫秒时间戳
+       *       timestamp?: number
+       *       // 指标值
+       *       value?: number
+       *     }>
+       *     // 发送速率（bps）
+       *     // [items] start
+       *     // 监控指标数据点
+       *     // [items] end
+       *     tx: Array<{
+       *       // 13位毫秒时间戳
+       *       timestamp?: number
+       *       // 指标值
+       *       value?: number
+       *     }>
+       *   }
+       * }
+       * ```
+       */
+      getNetworkUsage<
+        Config extends Alova2MethodConfig<RNetworkUsageVo> & {
+          params: {
+            /**
+             * 服务器主键ID
+             */
+            serverId?: string;
+            /**
+             * 查询时间范围（秒），默认 3600
+             */
+            duration?: number;
+            /**
+             * 采样步长（秒），默认 60
+             */
+            step?: number;
+          };
+        }
+      >(
+        config: Config
+      ): Alova2Method<RNetworkUsageVo, 'monitor.getNetworkUsage', Config>;
       /**
        * ---
        *
@@ -1335,24 +1461,24 @@ declare global {
       >(
         config: Config
       ): Alova2Method<RListMetricPoint, 'monitor.getCpuUsage', Config>;
+    };
+    general: {
       /**
        * ---
        *
-       * [GET] 获取网络流量趋势
+       * [POST] 登录获取 token
        *
-       * **path:** /api/monitor/network
+       * **path:** /api/login
        *
        * ---
        *
-       * **Query Parameters**
+       * **RequestBody**
        * ```ts
-       * type QueryParameters = {
-       *   // 服务器主键ID
-       *   serverId?: string
-       *   // 查询时间范围（秒），默认 3600
-       *   duration?: number
-       *   // 采样步长（秒），默认 60
-       *   step?: number
+       * type RequestBody = {
+       *   // 用户名
+       *   username: string
+       *   // 密码
+       *   password: string
        * }
        * ```
        *
@@ -1367,50 +1493,23 @@ declare global {
        *   msg?: string
        *   // 数据对象
        *   data?: {
-       *     // 接收速率（bps）
-       *     // [items] start
-       *     // 监控指标数据点
-       *     // [items] end
-       *     rx: Array<{
-       *       // 13位毫秒时间戳
-       *       timestamp?: number
-       *       // 指标值
-       *       value?: number
-       *     }>
-       *     // 发送速率（bps）
-       *     // [items] start
-       *     // 监控指标数据点
-       *     // [items] end
-       *     tx: Array<{
-       *       // 13位毫秒时间戳
-       *       timestamp?: number
-       *       // 指标值
-       *       value?: number
-       *     }>
+       *     // token 值
+       *     token?: string
+       *     // token 名称，后续请求需放在此名称的请求头中
+       *     tokenName?: string
+       *     // token 剩余有效时间（秒）
+       *     timeout?: number
        *   }
        * }
        * ```
        */
-      getNetworkUsage<
-        Config extends Alova2MethodConfig<RNetworkUsageVo> & {
-          params: {
-            /**
-             * 服务器主键ID
-             */
-            serverId?: string;
-            /**
-             * 查询时间范围（秒），默认 3600
-             */
-            duration?: number;
-            /**
-             * 采样步长（秒），默认 60
-             */
-            step?: number;
-          };
+      login<
+        Config extends Alova2MethodConfig<RLoginResultVo> & {
+          data: LoginBo;
         }
       >(
         config: Config
-      ): Alova2Method<RNetworkUsageVo, 'monitor.getNetworkUsage', Config>;
+      ): Alova2Method<RLoginResultVo, 'general.login', Config>;
     };
   }
 
