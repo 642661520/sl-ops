@@ -1,5 +1,12 @@
 # sl-ops
 
+## 0.1.1
+
+### Patch Changes
+
+- 6ce1b84: ♻️ refactor(views): 使用接口类型替换 any，移除 eslint-disable 注释
+- 90d3951: 🐛 fix(api-instance): 统一处理 401 认证过期逻辑
+
 ## 0.1.0
 
 ### Minor Changes
