@@ -4,6 +4,7 @@ import App from './App.vue'
 import router from './router'
 import { Apis } from '@/api'
 import 'virtual:uno.css'
+import '@/styles/global.css'
 
 // ECharts 初始化 - 注册渲染器和组件
 import { use } from 'echarts/core'

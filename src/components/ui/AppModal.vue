@@ -4,11 +4,11 @@
       <div v-if="visible" class="fixed inset-0 z-9990 flex items-center justify-center p-4">
         <div class="absolute inset-0 bg-black/50 transition-opacity" @click="handleCancel"></div>
         <div
-          class="relative max-h-[85vh] overflow-auto rounded-xl bg-white shadow-2xl dark:bg-gray-800"
+          class="relative flex max-h-[85vh] flex-col rounded-xl bg-white shadow-2xl dark:bg-gray-800"
           :style="{ width: width || '520px' }"
         >
           <div
-            class="flex items-center justify-between border-b border-gray-100 px-6 py-4 dark:border-gray-700"
+            class="flex-shrink-0 flex items-center justify-between border-b border-gray-100 px-6 py-4 dark:border-gray-700"
           >
             <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">
               {{ title }}
@@ -20,12 +20,12 @@
               <span class="i-carbon-close text-lg"></span>
             </button>
           </div>
-          <div class="px-6 py-4">
+          <div class="flex-1 overflow-auto px-6 py-4">
             <slot></slot>
           </div>
           <div
             v-if="showFooter"
-            class="flex justify-end gap-3 border-t border-gray-100 px-6 py-4 dark:border-gray-700"
+            class="flex-shrink-0 flex justify-end gap-3 border-t border-gray-100 px-6 py-4 dark:border-gray-700"
           >
             <slot name="footer">
               <app-button variant="default" size="sm" @click="handleCancel">

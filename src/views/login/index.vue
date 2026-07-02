@@ -118,8 +118,6 @@
             登 录
           </app-button>
         </form>
-
-        <p class="mt-6 text-center text-xs text-gray-400">演示账号：admin / admin123</p>
       </div>
     </div>
   </div>

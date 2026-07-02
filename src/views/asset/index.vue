@@ -2,7 +2,7 @@
   <div class="page-container">
     <div class="sticky top-0 z-10 -mx-4 -mt-4 mb-6 bg-gray-50 px-4 pb-3 pt-4 dark:bg-gray-900">
       <div class="mb-4 flex items-center justify-between">
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">服务器资产</h1>
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">主机管理</h1>
         <app-button variant="primary" size="sm" @click="openCreate">
           <span class="i-carbon-add"></span>
           新增服务器
@@ -109,7 +109,6 @@
           >
           <app-input v-model="form.sshPassword" type="password" placeholder="请输入 SSH 密码" />
         </div>
-        <p v-else class="text-xs text-gray-400">编辑模式下不修改密码，如需修改请单独操作</p>
       </div>
     </app-modal>
   </div>
