@@ -66,10 +66,9 @@ const emit = defineEmits<{
 const route = useRoute()
 
 const menuItems = [
-  { path: '/', label: '仪表盘', icon: 'i-carbon-dashboard' },
-  { path: '/servers', label: '服务器资产', icon: 'i-carbon-data-center' },
-  { path: '/services', label: '服务管理', icon: 'i-carbon-cics-system-group' },
-  { path: '/control', label: '服务管控', icon: 'i-carbon-terminal' },
+  { path: '/', label: '监控中心', icon: 'i-carbon-dashboard' },
+  { path: '/servers', label: '主机管理', icon: 'i-carbon-data-center' },
+  { path: '/control', label: '服务管理', icon: 'i-carbon-cics-system-group' },
 ]
 
 function isActive(path: string) {

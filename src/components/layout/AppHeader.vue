@@ -77,10 +77,9 @@ const username = computed(() => authStore.userInfo?.username || '用户')
 
 const pageTitle = computed(() => {
   const map: Record<string, string> = {
-    dashboard: '仪表盘',
-    services: '服务管理',
-    servers: '服务器资产',
-    control: '服务管控',
+    dashboard: '监控中心',
+    servers: '主机管理',
+    control: '服务管理',
   }
   return map[String(route.name)] || ''
 })
