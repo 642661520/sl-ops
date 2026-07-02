@@ -259,10 +259,29 @@ async function manualRefresh() {
 }
 
 // 监控总览
+interface OverviewItem {
+  serverId: string
+  hostName: string
+  online: boolean
+  cpuUsage?: string
+  memoryUsage?: string
+  diskUsage?: string
+}
+
+interface MetricParams {
+  serverId?: string
+  duration?: number
+  step?: number
+}
+
+interface ServerInfo {
+  id: string
+  hostName: string
+}
+
 const overviewLoading = ref(false)
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const overviewData = ref<any[]>([])
-const allServers = ref<{ id: string; hostName: string }[]>([])
+const overviewData = ref<OverviewItem[]>([])
+const allServers = ref<ServerInfo[]>([])
 
 const overviewColumns: TableColumn[] = [
   { key: 'hostName', title: '主机名' },
@@ -463,25 +482,23 @@ async function loadChartData() {
   }
 }
 
-async function fetchMetric(tab: string, p: Record<string, unknown>): Promise<ChartSeries[] | null> {
+async function fetchMetric(tab: string, p: MetricParams): Promise<ChartSeries[] | null> {
   try {
     let res: { data?: unknown } | null = null
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const params = p as any
     switch (tab) {
       case 'cpu':
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        res = await Apis.monitor.getCpuUsage({ params: p as any }).send()
+        res = await Apis.monitor.getCpuUsage({ params }).send()
         break
       case 'memory':
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        res = await Apis.monitor.getMemoryUsage({ params: p as any }).send()
+        res = await Apis.monitor.getMemoryUsage({ params }).send()
         break
       case 'disk':
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        res = await Apis.monitor.getDiskUsage({ params: p as any }).send()
+        res = await Apis.monitor.getDiskUsage({ params }).send()
         break
       case 'network':
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        res = await Apis.monitor.getNetworkUsage({ params: p as any }).send()
+        res = await Apis.monitor.getNetworkUsage({ params }).send()
         break
     }
     if (!res?.data) return null
@@ -514,12 +531,19 @@ async function loadOverview() {
     }[]
     const overviewMap = new Map(data.map((s) => [s.serverId, s]))
 
-    overviewData.value = allServers.value.map((srv) => {
+    overviewData.value = allServers.value.map((srv): OverviewItem => {
       const ov = overviewMap.get(srv.id)
       const hasMetrics =
         ov && (Number(ov.cpuUsage) > 0 || Number(ov.memoryUsage) > 0 || Number(ov.diskUsage) > 0)
       if (ov && hasMetrics) {
-        return { ...ov, hostName: srv.hostName, online: true }
+        return {
+          serverId: srv.id,
+          hostName: srv.hostName,
+          online: true,
+          cpuUsage: ov.cpuUsage,
+          memoryUsage: ov.memoryUsage,
+          diskUsage: ov.diskUsage,
+        }
       }
       return { serverId: srv.id, hostName: srv.hostName, online: false }
     })
@@ -555,9 +579,8 @@ async function loadServices() {
 async function loadServers() {
   try {
     const res = await Apis.asset.list_1({ params: {} }).send()
-    const list = res.data || []
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    allServers.value = list.map((s: any) => ({ id: s.id, hostName: s.hostName }))
+    const list = (res.data || []) as ServerInfo[]
+    allServers.value = list.map((s) => ({ id: s.id, hostName: s.hostName }))
   } catch {
     allServers.value = []
   }

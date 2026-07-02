@@ -49,10 +49,14 @@
         </template>
         <template #cell-actions="{ row }">
           <div class="flex items-center gap-1">
-            <app-button variant="text" size="sm" @click="openEdit(row)">
+            <app-button variant="text" size="sm" @click="openEdit(row as unknown as ServerItem)">
               <span class="i-carbon-edit"></span>
             </app-button>
-            <app-button variant="text" size="sm" @click="handleDelete(row)">
+            <app-button
+              variant="text"
+              size="sm"
+              @click="handleDelete(row as unknown as ServerItem)"
+            >
               <span class="i-carbon-trash-can text-red-500"></span>
             </app-button>
           </div>
@@ -124,6 +128,15 @@ import type { DialogInstance } from '@/composables/useDialog'
 const message = inject<MessageInstance>(MESSAGE_KEY)!
 const dialog = inject<DialogInstance>(DIALOG_KEY)!
 
+interface ServerItem {
+  id: string
+  hostIp: string
+  hostName: string
+  sshPort: number
+  sshUsername: string
+  nodeExporterPort: number
+}
+
 const columns: TableColumn[] = [
   { key: 'hostIp', title: 'IP 地址', width: '150px' },
   { key: 'hostName', title: '主机别名' },
@@ -134,8 +147,7 @@ const columns: TableColumn[] = [
 ]
 
 const loading = ref(false)
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const tableData = ref<any[]>([])
+const tableData = ref<ServerItem[]>([])
 const searchIp = ref('')
 const searchName = ref('')
 
@@ -160,8 +172,7 @@ function openCreate() {
   modalVisible.value = true
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function openEdit(row: any) {
+function openEdit(row: ServerItem) {
   editingId.value = row.id
   Object.assign(form, {
     hostIp: row.hostIp || '',
@@ -184,24 +195,35 @@ async function handleSubmit() {
     return
   }
   submitting.value = true
+  const sshPort = Number(form.sshPortStr) || 22
+  const exporterPort = Number(form.nodeExporterPortStr) || 9100
   try {
-    const payload = {
-      hostIp: form.hostIp,
-      hostName: form.hostName,
-      sshPort: Number(form.sshPortStr) || 22,
-      sshUsername: form.sshUsername,
-      nodeExporterPort: Number(form.nodeExporterPortStr) || 9100,
-      sshPassword: undefined as string | undefined,
-    }
-    if (!editingId.value) {
-      payload.sshPassword = form.sshPassword
-    }
     if (editingId.value) {
-      await Apis.asset.update_1({ data: { id: editingId.value, ...payload } }).send()
+      await Apis.asset
+        .update_1({
+          data: {
+            id: editingId.value,
+            hostName: form.hostName,
+            sshPort,
+            sshUsername: form.sshUsername,
+            nodeExporterPort: exporterPort,
+          },
+        })
+        .send()
       message.success('更新成功')
     } else {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      await Apis.asset.create_1({ data: payload as any }).send()
+      await Apis.asset
+        .create_1({
+          data: {
+            hostIp: form.hostIp,
+            hostName: form.hostName,
+            sshPort,
+            sshUsername: form.sshUsername,
+            sshPassword: form.sshPassword,
+            nodeExporterPort: exporterPort,
+          },
+        })
+        .send()
       message.success('创建成功')
     }
     closeModal()
@@ -213,15 +235,14 @@ async function handleSubmit() {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function handleDelete(row: any) {
+function handleDelete(row: ServerItem) {
   dialog.show({
     title: '删除服务器',
     content: `确定要删除服务器「${row.hostName} (${row.hostIp})」吗？此操作不可撤销。`,
     type: 'danger',
     async onConfirm() {
       try {
-        await Apis.asset.delete_1({ pathParams: { id: Number(row.id.replace('srv-', '')) } }).send()
+        await Apis.asset.delete_1({ pathParams: { id: row.id as unknown as number } }).send()
         message.success('删除成功')
         await loadData()
       } catch (e: unknown) {

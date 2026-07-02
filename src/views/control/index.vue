@@ -241,10 +241,30 @@ import type { DialogInstance } from '@/composables/useDialog'
 const message = inject<MessageInstance>(MESSAGE_KEY)!
 const dialog = inject<DialogInstance>(DIALOG_KEY)!
 
+interface ServiceForm {
+  serviceName: string
+  serviceType: 'docker' | 'systemctl'
+  serverId: string
+  description: string
+}
+
+interface ServerOption {
+  id: string
+  hostName: string
+  hostIp: string
+}
+
+interface ServiceItem {
+  id: string
+  serverId: string
+  serviceName: string
+  serviceType: string
+  description: string
+}
+
 const loading = ref(false)
 const refreshing = ref(false)
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const services = ref<any[]>([])
+const services = ref<ServiceItem[]>([])
 const searchName = ref('')
 const searchType = ref('')
 
@@ -270,14 +290,14 @@ const typeOptions = [
 
 const searchTypeOptions = [{ label: '全部', value: '' }, ...typeOptions]
 
-const emptyForm = () => ({
+const emptyForm = (): ServiceForm => ({
   serviceName: '',
-  serviceType: 'docker',
+  serviceType: 'docker' as const,
   serverId: '',
   description: '',
 })
 
-const form = reactive(emptyForm())
+const form = reactive<ServiceForm>(emptyForm())
 
 // 远程已有服务
 const remoteServices = ref<{ docker: string[]; systemctl: string[] }>({ docker: [], systemctl: [] })
@@ -348,12 +368,11 @@ async function loadServices() {
       .list({
         params: {
           serviceName: searchName.value || undefined,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          serviceType: (searchType.value || undefined) as any,
+          serviceType: (searchType.value || undefined) as ServiceForm['serviceType'] | undefined,
         },
       })
       .send()
-    services.value = res.data || []
+    services.value = (res.data || []) as ServiceItem[]
   } catch {
     services.value = []
   } finally {
@@ -364,10 +383,9 @@ async function loadServices() {
 async function loadServers() {
   try {
     const res = await Apis.asset.list_1({ params: {} }).send()
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const list = res.data || ([] as any[])
+    const list = (res.data || []) as ServerOption[]
     const map: Record<string, string> = {}
-    serverOptions.value = list.map((s: any) => {
+    serverOptions.value = list.map((s) => {
       map[s.id] = s.hostName
       return { label: `${s.hostName} (${s.hostIp})`, value: s.id }
     })
@@ -429,8 +447,7 @@ watch(remoteKeyword, (val) => debouncedSearch(val))
 
 // --- 启停操作 ---
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function executeAction(svc: any, action: string) {
+function executeAction(svc: ServiceItem, action: string) {
   const actionLabel: Record<string, string> = { start: '启动', stop: '停止', restart: '重启' }
   dialog.show({
     title: `确认${actionLabel[action]}`,
@@ -468,8 +485,7 @@ function openCreate() {
   modalVisible.value = true
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function openEdit(svc: any) {
+function openEdit(svc: ServiceItem) {
   editingId.value = svc.id
   Object.assign(form, {
     serviceName: svc.serviceName || '',
@@ -494,10 +510,19 @@ async function handleSubmit() {
   submitting.value = true
   try {
     if (editingId.value) {
-      await Apis.service.update({ data: { id: editingId.value, ...form } as any }).send()
+      await Apis.service
+        .update({
+          data: {
+            id: editingId.value,
+            serviceName: form.serviceName,
+            serviceType: form.serviceType,
+            description: form.description,
+          },
+        })
+        .send()
       message.success('更新成功')
     } else {
-      await Apis.service.create({ data: form as any }).send()
+      await Apis.service.create({ data: form as ServiceForm }).send()
       message.success('创建成功')
     }
     closeModal()
@@ -509,17 +534,14 @@ async function handleSubmit() {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function handleDelete(svc: any) {
+function handleDelete(svc: ServiceItem) {
   dialog.show({
     title: '删除服务',
     content: `确定要删除服务「${svc.serviceName}」吗？此操作不可撤销。`,
     type: 'danger',
     async onConfirm() {
       try {
-        await Apis.service
-          .delete_({ pathParams: { id: Number(svc.id.replace('svc-', '')) } })
-          .send()
+        await Apis.service.delete_({ pathParams: { id: svc.id as unknown as number } }).send()
         message.success('删除成功')
         await loadServices()
       } catch (e: unknown) {
