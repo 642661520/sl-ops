@@ -1,6 +1,5 @@
 /// <reference types='./globals.d.ts' />
 /* tslint:disable */
-/* eslint-disable */
 /**
  * 默认模块 - version 1.0.0
  *
