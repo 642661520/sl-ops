@@ -1,6 +1,6 @@
 /// <reference types='./globals.d.ts' />
 /* tslint:disable */
- 
+/* eslint-disable */
 /**
  * 默认模块 - version 1.0.0
  *
@@ -29,6 +29,7 @@ export default {
   'asset.list_1': ['GET', '/api/server/list'],
   'serviceControl.executeControl': ['POST', '/api/control/execute'],
   'serviceControl.getStatus': ['GET', '/api/control/status'],
+  'serviceControl.batchStatus': ['POST', '/api/control/status/batch'],
   'monitor.getOverview': ['GET', '/api/monitor/overview'],
   'monitor.getNetworkUsage': ['GET', '/api/monitor/network'],
   'monitor.getMemoryUsage': ['GET', '/api/monitor/memory'],

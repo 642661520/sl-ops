@@ -183,8 +183,7 @@
             "required": true,
             "example": "",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             }
           }
         ],
@@ -685,6 +684,55 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/RInteger"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RVoid"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/control/status/batch": {
+      "post": {
+        "summary": "批量查询服务运行状态",
+        "deprecated": false,
+        "description": "批量查询服务运行状态",
+        "operationId": "batchStatus",
+        "tags": ["服务管控接口"],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BatchStatusBo"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "服务状态列表",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RListServiceStatusVo"
                 }
               }
             },
@@ -1706,6 +1754,59 @@
             }
           }
         }
+      },
+      "BatchStatusBo": {
+        "type": "object",
+        "description": "批量查询服务状态请求",
+        "properties": {
+          "serviceIds": {
+            "type": "array",
+            "description": "服务ID列表",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1
+          }
+        },
+        "required": ["serviceIds"]
+      },
+      "RListServiceStatusVo": {
+        "type": "object",
+        "description": "响应信息主体",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "description": "消息状态码"
+          },
+          "msg": {
+            "type": "string",
+            "description": "消息内容"
+          },
+          "data": {
+            "type": "array",
+            "description": "数据对象",
+            "items": {
+              "$ref": "#/components/schemas/ServiceStatusVo"
+            }
+          }
+        }
+      },
+      "ServiceStatusVo": {
+        "type": "object",
+        "description": "服务状态",
+        "properties": {
+          "serviceId": {
+            "type": "string",
+            "description": "服务ID"
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "description": "服务状态码 (1: 运行中, 2: 已停止, 3: 异常, 4: 部分运行)"
+          }
+        },
+        "required": ["serviceId", "status"]
       }
     },
     "responses": {},

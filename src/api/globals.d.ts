@@ -186,6 +186,12 @@ export interface ControlExecuteBo {
    */
   action: 'start' | 'stop' | 'restart';
 }
+export interface BatchStatusBo {
+  /**
+   * 服务ID列表
+   */
+  serviceIds: string[];
+}
 export interface LoginBo {
   /**
    * 用户名
@@ -391,6 +397,30 @@ export interface RInteger {
    * 数据对象
    */
   data?: number;
+}
+export interface ServiceStatusVo {
+  /**
+   * 服务ID
+   */
+  serviceId: string;
+  /**
+   * 服务状态码 (1: 运行中, 2: 已停止, 3: 异常, 4: 部分运行)
+   */
+  status: number;
+}
+export interface RListServiceStatusVo {
+  /**
+   * 消息状态码
+   */
+  code?: number;
+  /**
+   * 消息内容
+   */
+  msg?: string;
+  /**
+   * 数据对象
+   */
+  data?: ServiceStatusVo[];
 }
 export interface MetricPoint {
   /**
@@ -645,7 +675,7 @@ declare global {
        * **Path Parameters**
        * ```ts
        * type PathParameters = {
-       *   id: number
+       *   id: string
        * }
        * ```
        *
@@ -666,7 +696,7 @@ declare global {
       delete_<
         Config extends Alova2MethodConfig<RBoolean> & {
           pathParams: {
-            id: number;
+            id: string;
           };
         }
       >(
@@ -1156,6 +1186,54 @@ declare global {
       >(
         config: Config
       ): Alova2Method<RInteger, 'serviceControl.getStatus', Config>;
+      /**
+       * ---
+       *
+       * [POST] 批量查询服务运行状态
+       *
+       * **path:** /api/control/status/batch
+       *
+       * ---
+       *
+       * **RequestBody**
+       * ```ts
+       * type RequestBody = {
+       *   // 服务ID列表
+       *   // [items] start
+       *   // [items] end
+       *   serviceIds: string[]
+       * }
+       * ```
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = {
+       *   // 消息状态码
+       *   code?: number
+       *   // 消息内容
+       *   msg?: string
+       *   // 数据对象
+       *   // [items] start
+       *   // 服务状态
+       *   // [items] end
+       *   data?: Array<{
+       *     // 服务ID
+       *     serviceId: string
+       *     // 服务状态码 (1: 运行中, 2: 已停止, 3: 异常, 4: 部分运行)
+       *     status: number
+       *   }>
+       * }
+       * ```
+       */
+      batchStatus<
+        Config extends Alova2MethodConfig<RListServiceStatusVo> & {
+          data: BatchStatusBo;
+        }
+      >(
+        config: Config
+      ): Alova2Method<RListServiceStatusVo, 'serviceControl.batchStatus', Config>;
     };
     monitor: {
       /**

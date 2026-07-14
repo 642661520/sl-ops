@@ -1,13 +1,12 @@
 import { defineMock } from '@alova/mock'
-import overviewData from './data/overview.json'
 import serversData from './data/servers.json'
 
 // 根据服务器数据动态生成基准值
 const serverProfiles: Record<
   string,
-  { cpu: number; memory: number; disk: number; rx: number; tx: number }
+  { cpu: number; memory: number; disk: number; rx: number; tx: number; hostName: string }
 > = {}
-for (const s of serversData as { id: string }[]) {
+for (const s of serversData as { id: string; hostName: string }[]) {
   // 用 id 的 hashCode 生成稳定的基准值
   let hash = 0
   for (let i = 0; i < s.id.length; i++) {
@@ -20,6 +19,7 @@ for (const s of serversData as { id: string }[]) {
     disk: 15 + (absHash % 60),
     rx: 5 + (absHash % 85),
     tx: 3 + (absHash % 60),
+    hostName: s.hostName,
   }
 }
 
@@ -56,7 +56,7 @@ function getProfile(serverId?: string) {
   }
   // 全部服务器：取平均值
   const keys = Object.keys(serverProfiles)
-  const avg = (field: keyof (typeof serverProfiles)[string]) =>
+  const avg = (field: 'cpu' | 'memory' | 'disk' | 'rx' | 'tx') =>
     keys.reduce((sum, k) => sum + serverProfiles[k][field], 0) / keys.length
   return {
     cpu: avg('cpu'),
@@ -70,13 +70,19 @@ function getProfile(serverId?: string) {
 export default defineMock(
   {
     '[GET]/api/monitor/overview': ({ query }: { query: Record<string, string> }) => {
+      const variance = () => (Math.random() - 0.5) * 30
+      const allData = Object.entries(serverProfiles).map(([id, p]) => ({
+        serverId: id,
+        hostName: p.hostName,
+        cpuUsage: String(Math.max(0, Math.min(100, p.cpu + variance())).toFixed(1)),
+        memoryUsage: String(Math.max(0, Math.min(100, p.memory + variance())).toFixed(1)),
+        diskUsage: String(Math.max(0, Math.min(100, p.disk + variance() * 0.6)).toFixed(1)),
+      }))
       if (query.serverId) {
-        const item = overviewData.find(
-          (s: Record<string, unknown>) => s.serverId === query.serverId,
-        )
+        const item = allData.find((s) => s.serverId === query.serverId)
         return { code: 200, msg: 'success', data: item ? [item] : [] }
       }
-      return { code: 200, msg: 'success', data: overviewData }
+      return { code: 200, msg: 'success', data: allData }
     },
 
     '[GET]/api/monitor/network': ({ query }: { query: Record<string, string> }) => {

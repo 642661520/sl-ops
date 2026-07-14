@@ -53,6 +53,18 @@ export default defineMock(
       }
       return { code: 200, msg: 'success', data: status }
     },
+
+    '[POST]/api/control/status/batch': ({
+      data,
+    }: {
+      data: { serviceIds: string[] }
+    }) => {
+      const list = (data.serviceIds || []).map((id) => ({
+        serviceId: id,
+        status: statusMap[id] ?? 2,
+      }))
+      return { code: 200, msg: 'success', data: list }
+    },
   },
   true,
 )
