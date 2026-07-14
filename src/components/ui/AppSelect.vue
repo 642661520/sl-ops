@@ -4,8 +4,9 @@
       class="flex w-full cursor-pointer items-center justify-between rounded-lg border px-3 py-2 text-sm transition-all duration-200"
       :class="{
         'border-gray-300 bg-white dark:border-gray-600 dark:bg-gray-800': !disabled,
-        'border-gray-200 bg-gray-100 dark:border-gray-700 dark:bg-gray-900': disabled,
-        'ring-2 ring-primary/50': open,
+        'cursor-not-allowed border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800/50':
+          disabled,
+        'ring-2 ring-primary/50': open && !disabled,
       }"
       :disabled="disabled"
       @click="toggle"
@@ -13,21 +14,28 @@
       <span
         class="min-w-0 flex-1 truncate text-left"
         :class="{
-          'text-gray-400': !selectedLabel,
-          'text-gray-900 dark:text-gray-100': selectedLabel,
+          'text-gray-400': !selectedLabel && !disabled,
+          'text-gray-300 dark:text-gray-600': !selectedLabel && disabled,
+          'text-gray-900 dark:text-gray-100': selectedLabel && !disabled,
+          'text-gray-400 dark:text-gray-500': selectedLabel && disabled,
         }"
       >
         {{ selectedLabel || placeholder }}
       </span>
       <span
-        class="i-carbon-chevron-down ml-1 shrink-0 text-sm text-gray-400 transition-transform duration-200"
-        :class="{ 'rotate-180': open }"
+        class="i-carbon-chevron-down ml-1 shrink-0 text-sm transition-transform duration-200"
+        :class="{
+          'text-gray-400': !disabled,
+          'text-gray-300 dark:text-gray-600': disabled,
+          'rotate-180': open,
+        }"
       ></span>
     </button>
     <Transition name="select">
       <div
         v-if="open"
-        class="absolute z-50 mt-1 w-full rounded-lg border border-gray-200 bg-white py-1 shadow-lg dark:border-gray-600 dark:bg-gray-800"
+        class="absolute z-50 w-full rounded-lg border border-gray-200 bg-white py-1 shadow-lg dark:border-gray-600 dark:bg-gray-800"
+        :class="dropUp ? 'bottom-full mb-1' : 'top-full mt-1'"
       >
         <button
           v-for="opt in options"
@@ -52,8 +60,8 @@
 <script setup lang="ts">
 const props = withDefaults(
   defineProps<{
-    modelValue?: string
-    options?: { label: string; value: string }[]
+    modelValue?: string | number
+    options?: { label: string; value: string | number }[]
     placeholder?: string
     disabled?: boolean
   }>(),
@@ -66,11 +74,12 @@ const props = withDefaults(
 )
 
 const emit = defineEmits<{
-  'update:modelValue': [value: string]
+  'update:modelValue': [value: string | number]
 }>()
 
 const open = ref(false)
 const selectRef = ref<HTMLElement>()
+const dropUp = ref(false)
 
 const selectedLabel = computed(() => {
   const opt = props.options.find((o) => o.value === props.modelValue)
@@ -78,10 +87,20 @@ const selectedLabel = computed(() => {
 })
 
 function toggle() {
-  open.value = !open.value
+  if (open.value) {
+    open.value = false
+    return
+  }
+  // 检测下方空间是否足够，不够则向上弹出
+  if (selectRef.value) {
+    const rect = selectRef.value.getBoundingClientRect()
+    const estimatedHeight = Math.min(props.options.length, 6) * 36 + 16
+    dropUp.value = rect.bottom + estimatedHeight > window.innerHeight && rect.top > estimatedHeight
+  }
+  open.value = true
 }
 
-function select(value: string) {
+function select(value: string | number) {
   emit('update:modelValue', value)
   open.value = false
 }

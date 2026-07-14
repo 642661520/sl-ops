@@ -1,11 +1,7 @@
 <template>
   <button
-    class="inline-flex items-center justify-center gap-1.5 rounded-lg font-medium transition-all duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 disabled:cursor-not-allowed"
-    :class="[
-      variantClasses,
-      sizeClasses,
-      { 'w-full': block, 'opacity-60 pointer-events-none': disabled || loading },
-    ]"
+    class="inline-flex items-center justify-center gap-1.5 rounded-lg font-medium transition-all duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+    :class="[variantClasses, sizeClasses, { 'w-full': block }]"
     :disabled="disabled || loading"
     @click="emit('click', $event)"
   >
@@ -37,6 +33,17 @@ const emit = defineEmits<{
 }>()
 
 const variantClasses = computed(() => {
+  const d = props.disabled || props.loading
+  if (d) {
+    const map: Record<string, string> = {
+      primary: 'bg-primary/40 text-white/70 cursor-not-allowed',
+      default:
+        'bg-gray-50 text-gray-400 border border-gray-200 cursor-not-allowed dark:bg-gray-800/50 dark:text-gray-500 dark:border-gray-700',
+      danger: 'bg-red-300 text-white/80 cursor-not-allowed dark:bg-red-800/40 dark:text-white/50',
+      text: 'text-gray-300 cursor-not-allowed dark:text-gray-600',
+    }
+    return map[props.variant] || map.default
+  }
   const map: Record<string, string> = {
     primary: 'bg-primary text-white hover:bg-primary-hover active:bg-primary-pressed shadow-sm',
     default:
