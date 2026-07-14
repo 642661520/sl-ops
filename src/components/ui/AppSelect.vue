@@ -11,6 +11,7 @@
       @click="toggle"
     >
       <span
+        class="min-w-0 flex-1 truncate text-left"
         :class="{
           'text-gray-400': !selectedLabel,
           'text-gray-900 dark:text-gray-100': selectedLabel,
@@ -19,7 +20,7 @@
         {{ selectedLabel || placeholder }}
       </span>
       <span
-        class="i-carbon-chevron-down text-sm text-gray-400 transition-transform duration-200"
+        class="i-carbon-chevron-down ml-1 shrink-0 text-sm text-gray-400 transition-transform duration-200"
         :class="{ 'rotate-180': open }"
       ></span>
     </button>
@@ -31,7 +32,7 @@
         <button
           v-for="opt in options"
           :key="opt.value"
-          class="w-full cursor-pointer px-3 py-2 text-left text-sm transition-colors hover:bg-gray-100 dark:hover:bg-gray-700"
+          class="w-full cursor-pointer truncate px-3 py-2 text-left text-sm transition-colors hover:bg-gray-100 dark:hover:bg-gray-700"
           :class="{
             'bg-primary/10 text-primary': opt.value === modelValue,
             'text-gray-700 dark:text-gray-300': opt.value !== modelValue,
