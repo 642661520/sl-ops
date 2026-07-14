@@ -77,14 +77,14 @@
               </p>
             </div>
             <div class="ml-3 flex flex-shrink-0 items-center gap-1">
-              <button
-                class="cursor-pointer rounded p-0.5 text-gray-400 transition-colors hover:text-primary"
-                :class="{ 'animate-spin': refreshingSingle[svc.id] || refreshing }"
-                title="刷新状态"
+              <app-button
+                variant="default"
+                size="sm"
+                :loading="refreshingSingle[svc.id] || refreshing"
                 @click="refreshSingleStatus(svc.id)"
               >
-                <span class="i-carbon-renew text-xs"></span>
-              </button>
+                刷新
+              </app-button>
               <span
                 class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium"
                 :class="[
@@ -179,12 +179,21 @@
     >
       <div class="flex items-center justify-between min-h-8">
         <span class="text-sm text-gray-500 dark:text-gray-400">共 {{ services.length }} 条</span>
-        <app-pagination
-          :current="currentPage"
-          :total="services.length"
-          :page-size="pageSize"
-          @change="currentPage = $event"
-        />
+        <div class="flex items-center gap-4">
+          <div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+            <span>每页</span>
+            <div class="w-22">
+              <app-select v-model="pageSize" :options="pageSizeOptions" placeholder="条数" />
+            </div>
+            <span>条</span>
+          </div>
+          <app-pagination
+            :current="currentPage"
+            :total="services.length"
+            :page-size="pageSize"
+            @change="currentPage = $event"
+          />
+        </div>
       </div>
     </div>
 
@@ -230,7 +239,7 @@
             :options="serverOptions"
             :disabled="!!editingId"
             placeholder="请选择服务器"
-            @update:model-value="onServerChange"
+            @update:model-value="(v: string | number) => onServerChange(v as string)"
           />
         </div>
 
@@ -323,6 +332,11 @@ const searchServerId = ref('')
 // 分页
 const currentPage = ref(1)
 const pageSize = ref(12)
+const pageSizeOptions = [
+  { label: '12 条', value: 12 },
+  { label: '24 条', value: 24 },
+  { label: '48 条', value: 48 },
+]
 const pagedServices = computed(() => {
   const start = (currentPage.value - 1) * pageSize.value
   return services.value.slice(start, start + pageSize.value)
@@ -430,8 +444,8 @@ function getTypeLabel(type: string) {
 }
 
 function getTypeTag(type: string) {
-  const map: Record<string, string> = { docker: 'info', systemctl: 'success' }
-  return (map[type] || 'info') as 'info' | 'success' | 'warning' | 'danger'
+  const map: Record<string, string> = { docker: 'default', systemctl: 'default' }
+  return (map[type] || 'default') as 'info' | 'success' | 'warning' | 'danger' | 'default'
 }
 
 // --- 数据加载 ---
@@ -659,6 +673,11 @@ onMounted(async () => {
 })
 
 watch(currentPage, () => refreshStatuses())
+
+watch(pageSize, () => {
+  currentPage.value = 1
+  refreshStatuses()
+})
 
 useIntervalFn(refreshStatuses, 30000, { immediate: false })
 </script>
