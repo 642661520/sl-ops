@@ -1,13 +1,20 @@
 <template>
-  <div class="page-container">
-    <div class="sticky top-0 z-10 -mx-4 -mt-4 mb-6 bg-gray-50 px-4 pb-3 pt-4 dark:bg-gray-900">
+  <div class="page-container flex flex-col h-full pb-0">
+    <!-- 顶部：标题 + 搜索 -->
+    <div class="mb-6 shrink-0">
       <div class="mb-4 flex items-center justify-between">
         <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">服务管理</h1>
-        <div class="flex items-center gap-2">
-          <app-button variant="default" size="sm" @click="refreshStatuses">
-            <span class="i-carbon-renew" :class="{ 'animate-spin': refreshing }"></span>
-            刷新状态
-          </app-button>
+        <div class="flex items-center gap-3">
+          <div class="flex items-center gap-3 text-xs text-gray-400">
+            <span class="i-carbon-time"></span>
+            <span>每 30s 刷新 · 上次：{{ lastUpdated }}</span>
+            <button
+              class="cursor-pointer rounded p-1 hover:bg-gray-100 dark:hover:bg-gray-700"
+              @click="manualRefresh"
+            >
+              <span class="i-carbon-renew text-sm" :class="{ 'animate-spin': refreshing }"></span>
+            </button>
+          </div>
           <app-button variant="primary" size="sm" @click="openCreate">
             <span class="i-carbon-add"></span>
             新增服务
@@ -28,6 +35,13 @@
           <div class="w-40">
             <app-select v-model="searchType" :options="searchTypeOptions" placeholder="服务类型" />
           </div>
+          <div class="w-48">
+            <app-select
+              v-model="searchServerId"
+              :options="searchServerOptions"
+              placeholder="所属服务器"
+            />
+          </div>
           <app-button variant="default" size="sm" @click="loadServices">
             <span class="i-carbon-search"></span>
             查询
@@ -36,106 +50,141 @@
       </app-card>
     </div>
 
-    <!-- 服务卡片网格 -->
-    <div
-      v-if="!loading"
-      class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3"
-      style="grid-template-columns: repeat(auto-fill, minmax(380px, 1fr))"
-    >
-      <app-card v-for="svc in services" :key="svc.id">
-        <div class="flex items-start justify-between">
-          <div class="min-w-0 flex-1">
-            <div class="flex items-center gap-2">
-              <h4 class="truncate text-sm font-semibold text-gray-900 dark:text-gray-100">
-                {{ svc.serviceName }}
-              </h4>
-              <app-tag :type="getTypeTag(svc.serviceType)">
-                {{ getTypeLabel(svc.serviceType) }}
-              </app-tag>
+    <!-- 中间：可滚动的卡片区域 -->
+    <div class="flex-1 overflow-y-auto min-h-0">
+      <!-- 服务卡片网格 -->
+      <div
+        v-if="!loading"
+        class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3"
+        style="grid-template-columns: repeat(auto-fill, minmax(380px, 1fr))"
+      >
+        <app-card v-for="svc in pagedServices" :key="svc.id">
+          <div class="flex items-start justify-between">
+            <div class="min-w-0 flex-1">
+              <div class="flex items-center gap-2">
+                <h4 class="truncate text-sm font-semibold text-gray-900 dark:text-gray-100">
+                  {{ svc.serviceName }}
+                </h4>
+                <app-tag :type="getTypeTag(svc.serviceType)">
+                  {{ getTypeLabel(svc.serviceType) }}
+                </app-tag>
+              </div>
+              <p class="mt-1 truncate text-xs text-gray-400 dark:text-gray-500">
+                {{ serverNameMap[svc.serverId] || svc.serverId }}
+              </p>
+              <p class="mt-1 truncate text-xs text-gray-500 dark:text-gray-400">
+                {{ svc.description || '暂无描述' }}
+              </p>
             </div>
-            <p class="mt-1 truncate text-xs text-gray-400 dark:text-gray-500">
-              {{ serverNameMap[svc.serverId] || svc.serverId }}
-            </p>
-            <p class="mt-1 truncate text-xs text-gray-500 dark:text-gray-400">
-              {{ svc.description || '暂无描述' }}
-            </p>
-          </div>
-          <div class="ml-3 flex-shrink-0">
-            <span
-              class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium"
-              :class="getStatusClass(statusMap[svc.id])"
-            >
+            <div class="ml-3 flex flex-shrink-0 items-center gap-1">
+              <button
+                class="cursor-pointer rounded p-0.5 text-gray-400 transition-colors hover:text-primary"
+                :class="{ 'animate-spin': refreshingSingle[svc.id] || refreshing }"
+                title="刷新状态"
+                @click="refreshSingleStatus(svc.id)"
+              >
+                <span class="i-carbon-renew text-xs"></span>
+              </button>
               <span
-                class="i-carbon-circle-filled text-[8px]"
-                :class="getStatusDotClass(statusMap[svc.id])"
-              ></span>
-              {{ getStatusText(statusMap[svc.id]) }}
-            </span>
+                class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium"
+                :class="[
+                  getStatusClass(statusMap[svc.id]),
+                  { 'status-pulse': refreshingSingle[svc.id] || refreshing },
+                ]"
+              >
+                <span
+                  class="i-carbon-circle-filled text-[8px]"
+                  :class="[
+                    getStatusDotClass(statusMap[svc.id]),
+                    { 'animate-ping': refreshingSingle[svc.id] || refreshing },
+                  ]"
+                ></span>
+                {{ getStatusText(statusMap[svc.id]) }}
+              </span>
+            </div>
           </div>
-        </div>
 
-        <!-- 操作按钮 -->
-        <div class="mt-4 flex gap-2">
-          <app-button
-            variant="default"
-            size="sm"
-            :disabled="statusMap[svc.id] === 'running' || actionLoading[svc.id]"
-            :loading="actionLoading[svc.id] && actionTarget[svc.id] === 'start'"
-            @click="executeAction(svc, 'start')"
-          >
-            <span class="i-carbon-play text-green-500"></span>
-            启动
-          </app-button>
-          <app-button
-            variant="default"
-            size="sm"
-            :disabled="statusMap[svc.id] !== 'running' || actionLoading[svc.id]"
-            :loading="actionLoading[svc.id] && actionTarget[svc.id] === 'stop'"
-            @click="executeAction(svc, 'stop')"
-          >
-            <span class="i-carbon-stop text-red-500"></span>
-            停止
-          </app-button>
-          <app-button
-            variant="default"
-            size="sm"
-            :disabled="actionLoading[svc.id]"
-            :loading="actionLoading[svc.id] && actionTarget[svc.id] === 'restart'"
-            @click="executeAction(svc, 'restart')"
-          >
-            <span class="i-carbon-restart text-amber-500"></span>
-            重启
-          </app-button>
-          <div class="ml-auto flex gap-1">
-            <app-button variant="text" size="sm" @click="openEdit(svc)">
-              <span class="i-carbon-edit"></span>
+          <!-- 操作按钮 -->
+          <div class="mt-4 flex gap-2">
+            <app-button
+              variant="default"
+              size="sm"
+              :disabled="
+                statusMap[svc.id] === 'running' || !statusMap[svc.id] || actionLoading[svc.id]
+              "
+              :loading="actionLoading[svc.id] && actionTarget[svc.id] === 'start'"
+              @click="executeAction(svc, 'start')"
+            >
+              <span class="i-carbon-play text-green-500"></span>
+              启动
             </app-button>
-            <app-button variant="text" size="sm" @click="handleDelete(svc)">
-              <span class="i-carbon-trash-can text-red-500"></span>
+            <app-button
+              variant="default"
+              size="sm"
+              :disabled="statusMap[svc.id] !== 'running' || actionLoading[svc.id]"
+              :loading="actionLoading[svc.id] && actionTarget[svc.id] === 'stop'"
+              @click="executeAction(svc, 'stop')"
+            >
+              <span class="i-carbon-stop text-red-500"></span>
+              停止
             </app-button>
+            <app-button
+              variant="default"
+              size="sm"
+              :disabled="!statusMap[svc.id] || actionLoading[svc.id]"
+              :loading="actionLoading[svc.id] && actionTarget[svc.id] === 'restart'"
+              @click="executeAction(svc, 'restart')"
+            >
+              <span class="i-carbon-restart text-amber-500"></span>
+              重启
+            </app-button>
+            <div class="ml-auto flex gap-1">
+              <app-button variant="text" size="sm" @click="openEdit(svc)">
+                <span class="i-carbon-edit"></span>
+              </app-button>
+              <app-button variant="text" size="sm" @click="handleDelete(svc)">
+                <span class="i-carbon-trash-can text-red-500"></span>
+              </app-button>
+            </div>
+          </div>
+        </app-card>
+      </div>
+
+      <!-- 加载态 -->
+      <div
+        v-else
+        class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3"
+        style="grid-template-columns: repeat(auto-fill, minmax(380px, 1fr))"
+      >
+        <div
+          v-for="i in 6"
+          :key="i"
+          class="animate-pulse rounded-xl border border-gray-200 bg-white p-5 dark:border-gray-700 dark:bg-gray-800"
+        >
+          <div class="mb-3 h-4 w-2/3 rounded bg-gray-200 dark:bg-gray-700"></div>
+          <div class="mb-8 h-3 w-1/2 rounded bg-gray-100 dark:bg-gray-700"></div>
+          <div class="flex gap-2">
+            <div class="h-8 w-16 rounded bg-gray-100 dark:bg-gray-700"></div>
+            <div class="h-8 w-16 rounded bg-gray-100 dark:bg-gray-700"></div>
+            <div class="h-8 w-16 rounded bg-gray-100 dark:bg-gray-700"></div>
           </div>
         </div>
-      </app-card>
+      </div>
     </div>
 
-    <!-- 加载态 -->
+    <!-- 分页 -->
     <div
-      v-else
-      class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3"
-      style="grid-template-columns: repeat(auto-fill, minmax(380px, 1fr))"
+      v-if="!loading && services.length > 0"
+      class="border-t border-gray-100 py-3 dark:border-gray-700"
     >
-      <div
-        v-for="i in 6"
-        :key="i"
-        class="animate-pulse rounded-xl border border-gray-200 bg-white p-5 dark:border-gray-700 dark:bg-gray-800"
-      >
-        <div class="mb-3 h-4 w-2/3 rounded bg-gray-200 dark:bg-gray-700"></div>
-        <div class="mb-8 h-3 w-1/2 rounded bg-gray-100 dark:bg-gray-700"></div>
-        <div class="flex gap-2">
-          <div class="h-8 w-16 rounded bg-gray-100 dark:bg-gray-700"></div>
-          <div class="h-8 w-16 rounded bg-gray-100 dark:bg-gray-700"></div>
-          <div class="h-8 w-16 rounded bg-gray-100 dark:bg-gray-700"></div>
-        </div>
+      <div class="flex items-center justify-between min-h-8">
+        <span class="text-sm text-gray-500 dark:text-gray-400">共 {{ services.length }} 条</span>
+        <app-pagination
+          :current="currentPage"
+          :total="services.length"
+          :page-size="pageSize"
+          @change="currentPage = $event"
+        />
       </div>
     </div>
 
@@ -207,10 +256,10 @@
             <button
               v-for="name in remoteServiceOptions"
               :key="name"
-              :disabled="existingServiceNames.has(name)"
+              :disabled="allServiceNames.has(name)"
               class="rounded-md border border-gray-200 bg-gray-50 px-2.5 py-1 text-xs transition-colors"
               :class="
-                existingServiceNames.has(name)
+                allServiceNames.has(name)
                   ? 'cursor-not-allowed border-gray-100 bg-gray-100/50 text-gray-300 line-through dark:border-gray-700 dark:bg-gray-800/50 dark:text-gray-600'
                   : 'cursor-pointer text-gray-600 hover:border-primary/40 hover:bg-primary/5 hover:text-primary dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:border-primary/40 dark:hover:bg-primary/10'
               "
@@ -264,9 +313,20 @@ interface ServiceItem {
 
 const loading = ref(false)
 const refreshing = ref(false)
+const refreshingSingle = reactive<Record<string, boolean>>({})
+const lastUpdated = ref('--')
 const services = ref<ServiceItem[]>([])
 const searchName = ref('')
 const searchType = ref('')
+const searchServerId = ref('')
+
+// 分页
+const currentPage = ref(1)
+const pageSize = ref(12)
+const pagedServices = computed(() => {
+  const start = (currentPage.value - 1) * pageSize.value
+  return services.value.slice(start, start + pageSize.value)
+})
 
 // 状态映射
 const statusMap = ref<Record<string, string>>({})
@@ -288,7 +348,12 @@ const typeOptions = [
   { label: 'Systemctl', value: 'systemctl' },
 ]
 
-const searchTypeOptions = [{ label: '全部', value: '' }, ...typeOptions]
+const searchTypeOptions = [{ label: '全部类型', value: '' }, ...typeOptions]
+
+const searchServerOptions = computed(() => [
+  { label: '全部服务器', value: '' },
+  ...serverOptions.value,
+])
 
 const emptyForm = (): ServiceForm => ({
   serviceName: '',
@@ -308,13 +373,20 @@ const remoteServiceOptions = computed(() => {
   return remoteServices.value[form.serviceType as 'docker' | 'systemctl'] || []
 })
 
-const existingServiceNames = computed(() => {
-  const names = new Set<string>()
-  for (const svc of services.value) {
-    if (svc.serviceName) names.add(svc.serviceName)
+const allServiceNames = ref(new Set<string>())
+
+async function fetchAllServiceNames() {
+  try {
+    const res = await Apis.service.list({ params: {} }).send()
+    const names = new Set<string>()
+    for (const svc of (res.data || []) as ServiceItem[]) {
+      if (svc.serviceName) names.add(svc.serviceName)
+    }
+    allServiceNames.value = names
+  } catch {
+    allServiceNames.value = new Set()
   }
-  return names
-})
+}
 
 // --- 状态相关 ---
 
@@ -329,8 +401,9 @@ function getStatusText(status: string) {
     stopped: '已停止',
     error: '异常',
     degraded: '部分运行',
+    unknown: '未知',
   }
-  return map[status] || '已停止'
+  return map[status] || '未知'
 }
 
 function getStatusClass(status: string) {
@@ -339,6 +412,7 @@ function getStatusClass(status: string) {
   if (status === 'degraded')
     return 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400'
   if (status === 'error') return 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
+  if (status === 'unknown') return 'bg-gray-100 text-gray-400 dark:bg-gray-700 dark:text-gray-500'
   return 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400'
 }
 
@@ -346,6 +420,7 @@ function getStatusDotClass(status: string) {
   if (status === 'running') return 'text-green-500'
   if (status === 'degraded') return 'text-yellow-500'
   if (status === 'error') return 'text-red-500'
+  if (status === 'unknown') return 'text-gray-300 dark:text-gray-600'
   return 'text-gray-400'
 }
 
@@ -369,15 +444,18 @@ async function loadServices() {
         params: {
           serviceName: searchName.value || undefined,
           serviceType: (searchType.value || undefined) as ServiceForm['serviceType'] | undefined,
+          serverId: searchServerId.value || undefined,
         },
       })
       .send()
     services.value = (res.data || []) as ServiceItem[]
+    currentPage.value = 1
   } catch {
     services.value = []
   } finally {
     loading.value = false
   }
+  await refreshStatuses()
 }
 
 async function loadServers() {
@@ -398,20 +476,42 @@ async function loadServers() {
 
 async function refreshStatuses() {
   refreshing.value = true
-  const results = await Promise.all(
-    services.value.map(async (svc) => {
-      try {
-        const res = await Apis.serviceControl.getStatus({ params: { serviceId: svc.id } }).send()
-        return { id: svc.id, status: statusCodeToLabel(res.data ?? 0) }
-      } catch {
-        return { id: svc.id, status: 'stopped' }
+  const ids = pagedServices.value.map((s) => s.id)
+  if (ids.length > 0) {
+    try {
+      const res = await Apis.serviceControl.batchStatus({ data: { serviceIds: ids } }).send()
+      for (const item of res.data || []) {
+        statusMap.value[item.serviceId] = statusCodeToLabel(item.status)
       }
-    }),
-  )
-  for (const r of results) {
-    statusMap.value[r.id] = r.status
+    } catch {
+      for (const id of ids) {
+        statusMap.value[id] = 'stopped'
+      }
+    }
   }
+  updateTime()
   refreshing.value = false
+}
+
+async function refreshSingleStatus(serviceId: string) {
+  refreshingSingle[serviceId] = true
+  try {
+    const res = await Apis.serviceControl.getStatus({ params: { serviceId } }).send()
+    statusMap.value[serviceId] = statusCodeToLabel(res.data ?? 0)
+  } catch {
+    statusMap.value[serviceId] = 'stopped'
+  } finally {
+    refreshingSingle[serviceId] = false
+  }
+}
+
+function updateTime() {
+  lastUpdated.value = new Date().toLocaleTimeString('zh-CN')
+}
+
+async function manualRefresh() {
+  await refreshStatuses()
+  updateTime()
 }
 
 // --- 远程服务发现 ---
@@ -479,10 +579,11 @@ function executeAction(svc: ServiceItem, action: string) {
 
 // --- CRUD ---
 
-function openCreate() {
+async function openCreate() {
   editingId.value = ''
   Object.assign(form, emptyForm())
   modalVisible.value = true
+  await fetchAllServiceNames()
 }
 
 function openEdit(svc: ServiceItem) {
@@ -541,7 +642,7 @@ function handleDelete(svc: ServiceItem) {
     type: 'danger',
     async onConfirm() {
       try {
-        await Apis.service.delete_({ pathParams: { id: svc.id as unknown as number } }).send()
+        await Apis.service.delete_({ pathParams: { id: svc.id } }).send()
         message.success('删除成功')
         await loadServices()
       } catch (e: unknown) {
@@ -555,8 +656,26 @@ function handleDelete(svc: ServiceItem) {
 
 onMounted(async () => {
   await Promise.all([loadServices(), loadServers()])
-  await refreshStatuses()
 })
 
-useIntervalFn(refreshStatuses, 10000, { immediate: false })
+watch(currentPage, () => refreshStatuses())
+
+useIntervalFn(refreshStatuses, 30000, { immediate: false })
 </script>
+
+<style scoped>
+@keyframes status-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(0.96);
+  }
+}
+.status-pulse {
+  animation: status-pulse 0.8s ease-in-out infinite;
+}
+</style>
