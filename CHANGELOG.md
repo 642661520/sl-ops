@@ -1,5 +1,14 @@
 # sl-ops
 
+## 0.1.2
+
+### Patch Changes
+
+- 56b0b3f: ♻️ refactor(ui): 优化 AppSelect 组件样式，防止文本溢出
+- 3a423de: ✨ feat(dashboard): 新增动态刷新间隔与数据刷新动画
+- 38a2679: ✨ feat(dashboard): 新增动态刷新间隔与数据刷新动画
+- 87f7f75: ✨ feat(ops): 新增批量查询服务状态接口并修正参数类型
+
 ## 0.1.1
 
 ### Patch Changes
