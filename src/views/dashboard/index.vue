@@ -5,7 +5,10 @@
         <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">监控中心</h1>
         <div class="flex items-center gap-3 text-xs text-gray-400">
           <span class="i-carbon-time"></span>
-          <span>每 30s 刷新 · 上次：{{ lastUpdated }}</span>
+          <span>每 {{ selectedStep }}s 刷新 · 上次：{{ lastUpdated }}</span>
+          <div class="w-24">
+            <app-select v-model="selectedStep" :options="stepOptions" placeholder="步长" />
+          </div>
           <button
             class="cursor-pointer rounded p-1 hover:bg-gray-100 dark:hover:bg-gray-700"
             @click="manualRefresh"
@@ -131,7 +134,9 @@
                   :style="{ width: value + '%' }"
                 ></div>
               </div>
-              <span class="text-xs tabular-nums">{{ Number(value).toFixed(2) }}%</span>
+              <span class="text-xs tabular-nums" :class="{ 'pulse-highlight': isRefreshing }"
+                >{{ Number(value).toFixed(2) }}%</span
+              >
             </div>
           </template>
           <span v-else class="text-xs text-gray-300 dark:text-gray-600">--</span>
@@ -146,7 +151,9 @@
                   :style="{ width: value + '%' }"
                 ></div>
               </div>
-              <span class="text-xs tabular-nums">{{ Number(value).toFixed(2) }}%</span>
+              <span class="text-xs tabular-nums" :class="{ 'pulse-highlight': isRefreshing }"
+                >{{ Number(value).toFixed(2) }}%</span
+              >
             </div>
           </template>
           <span v-else class="text-xs text-gray-300 dark:text-gray-600">--</span>
@@ -161,7 +168,9 @@
                   :style="{ width: value + '%' }"
                 ></div>
               </div>
-              <span class="text-xs tabular-nums">{{ Number(value).toFixed(2) }}%</span>
+              <span class="text-xs tabular-nums" :class="{ 'pulse-highlight': isRefreshing }"
+                >{{ Number(value).toFixed(2) }}%</span
+              >
             </div>
           </template>
           <span v-else class="text-xs text-gray-300 dark:text-gray-600">--</span>
@@ -191,12 +200,6 @@
               />
             </div>
           </div>
-          <div class="flex items-center gap-2">
-            <span class="text-xs text-gray-400">步长</span>
-            <div class="w-24">
-              <app-select v-model="selectedStep" :options="stepOptions" placeholder="步长" />
-            </div>
-          </div>
           <div class="flex gap-1">
             <button
               v-for="tab in chartTabs"
@@ -223,6 +226,7 @@
           v-else-if="chartOption"
           :option="chartOption"
           :autoresize="true"
+          :update-options="{ notMerge: true, lazyUpdate: true }"
           class="h-full w-full"
         />
         <div v-else class="flex-center h-full text-sm text-gray-400">暂无数据</div>
@@ -252,10 +256,16 @@ function updateTime() {
 }
 
 async function manualRefresh() {
+  if (refreshing.value) return
   refreshing.value = true
-  await Promise.all([loadOverview(), loadServices(), loadChartData()])
-  updateTime()
-  refreshing.value = false
+  try {
+    await Promise.all([loadOverview(), loadServices()])
+    await loadChartData()
+    updateTime()
+    refreshKey.value++
+  } finally {
+    refreshing.value = false
+  }
 }
 
 // 监控总览
@@ -281,6 +291,16 @@ interface ServerInfo {
 
 const overviewLoading = ref(false)
 const overviewData = ref<OverviewItem[]>([])
+const refreshKey = ref(0)
+const isRefreshing = ref(false)
+
+watch(refreshKey, () => {
+  isRefreshing.value = true
+  setTimeout(() => {
+    isRefreshing.value = false
+  }, 1200)
+})
+
 const allServers = ref<ServerInfo[]>([])
 
 const overviewColumns: TableColumn[] = [
@@ -307,8 +327,8 @@ function formatBitrate(bps: number) {
 // 图表
 const activeTab = ref('cpu')
 const selectedServerId = ref('')
-const selectedDuration = ref('1800')
-const selectedStep = ref('60')
+const selectedDuration = ref('900')
+const selectedStep = ref('5')
 const durationOptions = [
   { label: '15 分钟', value: '900' },
   { label: '30 分钟', value: '1800' },
@@ -317,9 +337,10 @@ const durationOptions = [
   { label: '6 小时', value: '21600' },
 ]
 const stepOptions = [
+  { label: '5 秒', value: '5' },
+  { label: '15 秒', value: '15' },
   { label: '30 秒', value: '30' },
   { label: '1 分钟', value: '60' },
-  { label: '5 分钟', value: '300' },
 ]
 const serverOptions = computed(() => {
   const onlineIds = new Set(overviewData.value.filter((s) => s.online).map((s) => s.serverId))
@@ -378,6 +399,9 @@ const chartOption = computed(() => {
   if (!chartSeries.value.length) return null
   const c = chartColors.value
   return {
+    animation: true,
+    animationDuration: 800,
+    animationEasing: 'linear' as const,
     grid: { top: 10, right: 20, bottom: 50, left: 50 },
     color: chartSeries.value.map((s, i) => getSeriesColor(s.name, i)),
     legend: {
@@ -416,8 +440,9 @@ const chartOption = computed(() => {
         name: s.name,
         type: 'line' as const,
         data: s.data.map((p) => [p.timestamp, p.value]),
-        smooth: true,
         showSymbol: false,
+        animationDelay: i * 80,
+        animationDurationUpdate: 500,
         lineStyle: { color, width: 2 },
         areaStyle: {
           color: {
@@ -443,7 +468,8 @@ async function loadChartData() {
     chartLoading.value = false
     return
   }
-  chartLoading.value = true
+  const isFirstLoad = chartSeries.value.length === 0
+  if (isFirstLoad) chartLoading.value = true
   try {
     const params = {
       duration: Number(selectedDuration.value),
@@ -520,7 +546,8 @@ async function fetchMetric(tab: string, p: MetricParams): Promise<ChartSeries[] 
 }
 
 async function loadOverview() {
-  overviewLoading.value = true
+  const isFirstLoad = overviewData.value.length === 0
+  if (isFirstLoad) overviewLoading.value = true
   try {
     const res = await Apis.monitor.getOverview().send()
     const data = (res.data || []) as {
@@ -594,22 +621,55 @@ watch(selectedServerId, () => {
   loadChartData()
 })
 
-watch([selectedDuration, selectedStep], () => {
+watch(selectedDuration, () => {
   loadChartData()
+})
+
+const refreshDelay = computed(() => Number(selectedStep.value) * 1000)
+
+const { start: startAutoRefresh, stop: stopAutoRefresh } = useTimeoutFn(
+  async () => {
+    refreshing.value = true
+    try {
+      await Promise.all([loadOverview(), loadServices()])
+      await loadChartData()
+      updateTime()
+      refreshKey.value++
+    } finally {
+      refreshing.value = false
+      startAutoRefresh()
+    }
+  },
+  refreshDelay,
+  { immediate: false },
+)
+
+watch(selectedStep, async () => {
+  stopAutoRefresh()
+  await loadChartData()
+  startAutoRefresh()
 })
 
 onMounted(async () => {
   await loadServers()
   await manualRefresh()
+  startAutoRefresh()
 })
-
-// 每 30 秒自动刷新监控数据（不立即触发，首次由 onMounted 加载）
-useIntervalFn(
-  async () => {
-    await Promise.all([loadOverview(), loadServices(), loadChartData()])
-    updateTime()
-  },
-  30000,
-  { immediate: false },
-)
 </script>
+
+<style scoped>
+@keyframes pulse-highlight {
+  0% {
+    color: inherit;
+  }
+  30% {
+    color: #4f46e5;
+  }
+  100% {
+    color: inherit;
+  }
+}
+.pulse-highlight {
+  animation: pulse-highlight 1s ease-in-out;
+}
+</style>
