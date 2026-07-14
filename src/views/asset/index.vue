@@ -78,7 +78,11 @@
             <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300"
               >服务器 IP</label
             >
-            <app-input v-model="form.hostIp" placeholder="如: 192.168.1.10" />
+            <app-input
+              v-model="form.hostIp"
+              placeholder="如: 192.168.1.10"
+              :disabled="!!editingId"
+            />
           </div>
           <div>
             <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300"
