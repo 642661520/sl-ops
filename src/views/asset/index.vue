@@ -30,6 +30,10 @@
             <span class="i-carbon-search"></span>
             查询
           </app-button>
+          <app-button variant="default" size="sm" @click="resetSearch">
+            <span class="i-carbon-reset"></span>
+            重置
+          </app-button>
         </div>
       </app-card>
     </div>
@@ -273,6 +277,12 @@ async function loadData() {
   } finally {
     loading.value = false
   }
+}
+
+function resetSearch() {
+  searchIp.value = ''
+  searchName.value = ''
+  loadData()
 }
 
 onMounted(() => loadData())
