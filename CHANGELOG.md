@@ -1,5 +1,15 @@
 # sl-ops
 
+## 0.1.3
+
+### Patch Changes
+
+- cd90b59: 🐛 fix(ui): 修复 UI 组件禁用状态样式并增强 Select 向上弹出
+- 76017b0: ✨ feat(asset): 新增资产搜索重置功能
+- bab5817: ✨ feat(control): 新增搜索重置按钮并优化远程服务发现流程
+- dd7b23e: 🐛 fix(asset): 修复编辑资产时服务器 IP 可被修改的问题
+- 0fda5b4: ✨ feat(control): 优化服务列表刷新按钮和分页功能
+
 ## 0.1.2
 
 ### Patch Changes
