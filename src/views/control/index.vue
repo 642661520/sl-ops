@@ -46,6 +46,10 @@
             <span class="i-carbon-search"></span>
             查询
           </app-button>
+          <app-button variant="default" size="sm" @click="resetSearch">
+            <span class="i-carbon-reset"></span>
+            重置
+          </app-button>
         </div>
       </app-card>
     </div>
@@ -228,6 +232,7 @@
             :options="typeOptions"
             :disabled="!!editingId"
             placeholder="请选择服务类型"
+            @update:model-value="(v: string | number) => onServiceTypeChange(v as string)"
           />
         </div>
         <div>
@@ -255,15 +260,27 @@
               </template>
             </app-input>
           </div>
+
+          <!-- 加载态 -->
+          <div v-if="remoteLoading" class="flex flex-wrap gap-1.5">
+            <span
+              v-for="w in ['w-12', 'w-20', 'w-10', 'w-18', 'w-14']"
+              :key="w"
+              class="h-6.5 animate-pulse rounded-md border border-gray-100 bg-gray-100 dark:border-gray-700 dark:bg-gray-800"
+              :class="w"
+            ></span>
+          </div>
+
+          <!-- 空状态 -->
           <div
-            v-if="remoteServiceOptions.length === 0"
+            v-else-if="remoteServices.length === 0"
             class="py-2 text-center text-xs text-gray-400"
           >
             无匹配服务
           </div>
           <div v-else class="flex flex-wrap gap-1.5">
             <button
-              v-for="name in remoteServiceOptions"
+              v-for="name in remoteServices"
               :key="name"
               :disabled="allServiceNames.has(name)"
               class="rounded-md border border-gray-200 bg-gray-50 px-2.5 py-1 text-xs transition-colors"
@@ -379,19 +396,17 @@ const emptyForm = (): ServiceForm => ({
 const form = reactive<ServiceForm>(emptyForm())
 
 // 远程已有服务
-const remoteServices = ref<{ docker: string[]; systemctl: string[] }>({ docker: [], systemctl: [] })
+const remoteServices = ref<string[]>([])
+const remoteLoading = ref(false)
 const remoteKeyword = ref('')
-
-const remoteServiceOptions = computed(() => {
-  if (!form.serverId) return []
-  return remoteServices.value[form.serviceType as 'docker' | 'systemctl'] || []
-})
 
 const allServiceNames = ref(new Set<string>())
 
-async function fetchAllServiceNames() {
+async function fetchAllServiceNames(serverId?: string) {
   try {
-    const res = await Apis.service.list({ params: {} }).send()
+    const params: Record<string, string> = {}
+    if (serverId) params.serverId = serverId
+    const res = await Apis.service.list({ params }).send()
     const names = new Set<string>()
     for (const svc of (res.data || []) as ServiceItem[]) {
       if (svc.serviceName) names.add(svc.serviceName)
@@ -472,6 +487,14 @@ async function loadServices() {
   await refreshStatuses()
 }
 
+function resetSearch() {
+  searchName.value = ''
+  searchType.value = ''
+  searchServerId.value = ''
+  currentPage.value = 1
+  loadServices()
+}
+
 async function loadServers() {
   try {
     const res = await Apis.asset.list_1({ params: {} }).send()
@@ -530,31 +553,42 @@ async function manualRefresh() {
 
 // --- 远程服务发现 ---
 
-async function fetchRemoteServices(serverId: string, keyword?: string) {
+async function fetchRemoteServices(serverId: string, serviceType: string, keyword?: string) {
+  remoteLoading.value = true
   try {
     const res = await Apis.service
       .discover({ pathParams: { serverId }, params: { keyword: keyword || undefined } })
       .send()
-    remoteServices.value = (res.data || { docker: [], systemctl: [] }) as {
+    const data = (res.data || { docker: [], systemctl: [] }) as {
       docker: string[]
       systemctl: string[]
     }
+    remoteServices.value = data[serviceType as 'docker' | 'systemctl'] || []
   } catch {
-    remoteServices.value = { docker: [], systemctl: [] }
+    remoteServices.value = []
+  } finally {
+    remoteLoading.value = false
   }
 }
 
 async function onServerChange(serverId: string) {
   remoteKeyword.value = ''
   if (!serverId) {
-    remoteServices.value = { docker: [], systemctl: [] }
+    remoteServices.value = []
+    allServiceNames.value = new Set()
     return
   }
-  await fetchRemoteServices(serverId)
+  await fetchRemoteServices(serverId, form.serviceType)
+  await fetchAllServiceNames(serverId)
+}
+
+async function onServiceTypeChange(serviceType: string) {
+  if (!form.serverId) return
+  await fetchRemoteServices(form.serverId, serviceType)
 }
 
 const debouncedSearch = useDebounceFn((keyword: string) => {
-  if (form.serverId) fetchRemoteServices(form.serverId, keyword)
+  if (form.serverId) fetchRemoteServices(form.serverId, form.serviceType, keyword)
 }, 300)
 
 watch(remoteKeyword, (val) => debouncedSearch(val))
@@ -597,7 +631,6 @@ async function openCreate() {
   editingId.value = ''
   Object.assign(form, emptyForm())
   modalVisible.value = true
-  await fetchAllServiceNames()
 }
 
 function openEdit(svc: ServiceItem) {
@@ -613,8 +646,10 @@ function openEdit(svc: ServiceItem) {
 
 function closeModal() {
   modalVisible.value = false
-  remoteServices.value = { docker: [], systemctl: [] }
+  remoteServices.value = []
+  remoteLoading.value = false
   remoteKeyword.value = ''
+  allServiceNames.value = new Set()
 }
 
 async function handleSubmit() {
